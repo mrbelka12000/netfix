@@ -1,0 +1,19 @@
+{
+    "Postgres": {
+        "POSTGRES_DB": "postgres",
+        "POSTGRES_HOST": "postgres",
+        "POSTGRES_PASSWORD": "mrbelka12000",
+        "POSTGRES_PORT": "5432",
+        "POSTGRES_USER": "postgres"
+    },
+    "Kafka": {
+        "TopicCompany": "company",
+        "TopicCustomer": "customer",
+        "TopicLogin": "login",
+        "Brokers": "localhost:9092",
+        "RetryMax": 5,
+        "RequiredAcks": -1,
+        "Successes": true,
+        "MaxBytes": 10
+    }
+}
