@@ -2,11 +2,10 @@ package main
 
 import (
 	"github.com/mrbelka12000/netfix/auth/app"
-	"github.com/mrbelka12000/netfix/auth/config"
+	"github.com/mrbelka12000/netfix/auth/database"
 )
 
 func main() {
-
-	cfg := config.GetConf()
-	app.Initialize(cfg)
+	database.Up()
+	app.Initialize()
 }

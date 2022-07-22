@@ -14,7 +14,7 @@ type Customer interface {
 }
 
 type General interface {
-	Register(general *models.General, user string) (int, error)
+	Register(general *models.General) (int, error)
 }
 
 type Service struct {

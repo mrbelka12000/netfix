@@ -1,6 +1,10 @@
 package models
 
 type General struct {
-	Birth     string `json:"birth"`
+	ID        int    `json:"ID"`
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+	Email     string `json:"email"`
 	WorkField string `json:"workField"`
+	Birth     string `json:"birth"`
 }

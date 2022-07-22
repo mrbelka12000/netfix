@@ -15,5 +15,12 @@
         "RequiredAcks": -1,
         "Successes": true,
         "MaxBytes": 10
+    },
+    "App": {
+        "SchemaUp": "auth/database/up"
+    },
+    "Redis": {
+        "Host": "redis",
+        "Port": "6379"
     }
 }

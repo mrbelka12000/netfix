@@ -5,32 +5,40 @@ import (
 	"github.com/mrbelka12000/netfix/auth/config"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/Shopify/sarama"
 )
 
-func (d *Delivery) Produce(cfg *config.Config) {
+func (d *Delivery) Produce() {
+	cfg := config.GetConf()
 	// create producer
-	producer, err := initProducer(cfg)
+	producer, err := initProducer()
 	if err != nil {
 		fmt.Println("Error producer: ", err.Error())
 		os.Exit(1)
 	}
 	i := 0
 	for {
-
-		publish(strconv.Itoa(i), producer, cfg)
-		time.Sleep(time.Second)
+		msg := `
+{
+"email":"check",
+"username":"dom",
+"password":"12345",
+"workField":"zaebka",
+"birth":"2002-02-15"
+}
+`
+		publish(msg, producer, cfg.Kafka.TopicCustomer)
+		time.Sleep(5 * time.Second)
 		i++
 	}
 }
 
-func initProducer(cfg *config.Config) (sarama.SyncProducer, error) {
+func initProducer() (sarama.SyncProducer, error) {
 	// setup sarama log to stdout
 	//sarama.Logger = log.New(os.Stdout, "", log.Ltime)
-
+	cfg := config.GetConf()
 	// producer config
 	config := sarama.NewConfig()
 	config.Producer.Retry.Max = cfg.Kafka.RetryMax
@@ -46,11 +54,10 @@ func initProducer(cfg *config.Config) (sarama.SyncProducer, error) {
 	return prd, err
 }
 
-func publish(message string, producer sarama.SyncProducer, cfg *config.Config) {
+func publish(message string, producer sarama.SyncProducer, topic string) {
 	// publish sync
-
 	msg := &sarama.ProducerMessage{
-		Topic: cfg.Kafka.TopicCustomer,
+		Topic: topic,
 		Value: sarama.StringEncoder(message),
 	}
 	p, o, err := producer.SendMessage(msg)

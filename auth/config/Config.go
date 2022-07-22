@@ -25,6 +25,13 @@ type Config struct {
 		MaxBytes      int
 		Successes     bool
 	}
+	App struct {
+		SchemaUp string
+	}
+	Redis struct {
+		Host string
+		Port string
+	}
 }
 
 var (
