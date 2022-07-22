@@ -7,4 +7,5 @@ type General struct {
 	Email     string `json:"email"`
 	WorkField string `json:"workField"`
 	Birth     string `json:"birth"`
+	UUID      string `json:"uuid"`
 }

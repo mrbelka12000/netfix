@@ -47,7 +47,10 @@ func (d *Delivery) ConsumerForCompany() {
 		}
 
 		log.Println("successfully created")
-
+		err = publish(gen.UUID, cfg.Kafka.TopicAuth)
+		if err != nil {
+			log.Println(err.Error())
+		}
 	}
 }
 

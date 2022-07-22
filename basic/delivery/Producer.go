@@ -2,32 +2,10 @@ package delivery
 
 import (
 	"fmt"
-	"github.com/mrbelka12000/netfix/auth/config"
-	"log"
-	"time"
-
 	"github.com/Shopify/sarama"
+	"github.com/mrbelka12000/netfix/basic/config"
+	"log"
 )
-
-func (d *Delivery) Produce() {
-	cfg := config.GetConf()
-
-	i := 0
-	for {
-		msg := `
-{
-"email":"check",
-"username":"dom",
-"password":"12345",
-"workField":"zaebka",
-"birth":"2002-02-15"
-}
-`
-		publish(msg, cfg.Kafka.TopicCustomer)
-		time.Sleep(5 * time.Second)
-		i++
-	}
-}
 
 func initProducer() (sarama.SyncProducer, error) {
 	// setup sarama log to stdout
@@ -47,26 +25,23 @@ func initProducer() (sarama.SyncProducer, error) {
 
 	return prd, err
 }
-
-func publish(message string, topic string) error {
+func Publish(message, topic string) error {
 	producer, err := initProducer()
 	if err != nil {
-		log.Println("producer error: " + err.Error())
+		log.Println("error producer: " + err.Error())
 		return err
 	}
-	// publish sync
+
 	msg := &sarama.ProducerMessage{
 		Topic: topic,
 		Value: sarama.StringEncoder(message),
 	}
+
 	p, o, err := producer.SendMessage(msg)
 	if err != nil {
-		log.Println("Error publish: ", err.Error())
+		log.Println("send message error: " + err.Error())
 		return err
 	}
-
-	// publish async
-	// producer.Input() <- &sarama.ProducerMessage{
 
 	fmt.Println("Partition: ", p)
 	fmt.Println("Offset: ", o)

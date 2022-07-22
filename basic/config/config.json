@@ -1,0 +1,19 @@
+{
+  "App": {
+    "Port": "8081"
+  },
+  "Kafka": {
+    "TopicCompany": "company",
+    "TopicCustomer": "customer",
+    "TopicAuth": "auth",
+    "Brokers": "kafka:9092",
+    "RetryMax": 5,
+    "RequiredAcks": -1,
+    "Successes": true,
+    "MaxBytes": 10
+  },
+  "Redis": {
+    "Host": "redis",
+    "Port": "6379"
+  }
+}

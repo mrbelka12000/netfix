@@ -59,9 +59,26 @@ services:
         - redis
       networks:
         - netfix
+  basic:
+    container_name: basic
+    build:
+      dockerfile: basic/Dockerfile
+      context: .
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    volumes:
+      - basic:/usr/src/app/
+    depends_on:
+      - postgres
+      - kafka
+      - redis
+    networks:
+      - netfix
 
 volumes:
   auth:
+  basic:
   database_postgres:
 
 # Networks to be created to facilitate communication between containers

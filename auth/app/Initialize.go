@@ -11,7 +11,7 @@ func Initialize() {
 	srv := service.NewService(repo)
 	del := delivery.NewDelivery(srv)
 
-	go del.ConsumerForCompany()
-	go del.ConsumerForCustomer()
-	del.Produce()
+	del.ConsumerForCompany()
+	//go del.ConsumerForCustomer()
+	//del.Produce()
 }

@@ -9,7 +9,7 @@
     "Kafka": {
         "TopicCompany": "company",
         "TopicCustomer": "customer",
-        "TopicLogin": "login",
+        "TopicAuth": "auth",
         "Brokers": "kafka:9092",
         "RetryMax": 5,
         "RequiredAcks": -1,
