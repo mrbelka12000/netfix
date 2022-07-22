@@ -2,13 +2,11 @@ package delivery
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/segmentio/kafka-go"
 
 	"github.com/mrbelka12000/netfix/auth/config"
-	"github.com/mrbelka12000/netfix/auth/models"
 )
 
 func (d *Delivery) ConsumerForCompany(cfg *config.Config) {
@@ -29,17 +27,6 @@ func (d *Delivery) ConsumerForCompany(cfg *config.Config) {
 		}
 
 		fmt.Print("Message for company is : ", string(m.Value))
-		gen := &models.General{}
-
-		if err := json.Unmarshal(m.Value, &gen); err == nil {
-			_, err = d.srv.Register(gen, models.Cmp)
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
-		} else {
-			fmt.Println(err.Error())
-		}
 	}
 }
 

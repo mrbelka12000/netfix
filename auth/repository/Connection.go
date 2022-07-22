@@ -3,7 +3,9 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"github.com/mrbelka12000/netfix/auth/config"
+	"log"
 	"sync"
 )
 
@@ -27,11 +29,13 @@ func GetConnection() *sql.DB {
 func connectToDB() *sql.DB {
 	db, err := sql.Open("postgres", getConnectionString())
 	if err != nil {
+		log.Println("db open error: " + err.Error())
 		return nil
 	}
 
 	err = db.Ping()
 	if err != nil {
+		log.Println("ping error: " + err.Error())
 		return nil
 	}
 

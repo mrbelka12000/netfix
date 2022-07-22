@@ -5,6 +5,8 @@ import (
 	"github.com/mrbelka12000/netfix/auth/config"
 	"log"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/Shopify/sarama"
 )
@@ -16,9 +18,12 @@ func (d *Delivery) Produce(cfg *config.Config) {
 		fmt.Println("Error producer: ", err.Error())
 		os.Exit(1)
 	}
-
-	publish("check", producer, cfg)
+	i := 0
 	for {
+
+		publish(strconv.Itoa(i), producer, cfg)
+		time.Sleep(time.Second)
+		i++
 	}
 }
 
@@ -45,7 +50,7 @@ func publish(message string, producer sarama.SyncProducer, cfg *config.Config) {
 	// publish sync
 
 	msg := &sarama.ProducerMessage{
-		Topic: cfg.Kafka.TopicCompany,
+		Topic: cfg.Kafka.TopicCustomer,
 		Value: sarama.StringEncoder(message),
 	}
 	p, o, err := producer.SendMessage(msg)
