@@ -2,14 +2,17 @@ version: '2'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
+    networks:
+      - netfix
     ports:
       - "2181:2181"
   kafka:
     image: wurstmeister/kafka:latest
+    container_name: kafka
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ADVERTISED_HOST_NAME: "kafka"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "Generated:1:1,Solved:1:1,Unsolved:1:1"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
@@ -17,7 +20,50 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - zookeeper
+    networks:
+      - netfix
   redis:
     image: redis
+    container_name: redis
     ports:
       - "6379:6379"
+    networks:
+      - netfix
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mrbelka12000
+      - POSTGRES_DB=postgres
+      - DATABASE_HOST="localhost"
+    ports:
+      - '5432:5432'
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+    networks:
+      - netfix
+  auth:
+      container_name: auth
+      build:
+        dockerfile: auth/Dockerfile
+        context: .
+      ports:
+        - "8080:8080"
+      restart: on-failure
+      volumes:
+        - auth:/usr/src/app/
+      depends_on:
+        - postgres
+        - kafka
+      networks:
+        - netfix
+
+volumes:
+  auth:
+  database_postgres:
+
+# Networks to be created to facilitate communication between containers
+networks:
+  netfix:
+    driver: bridge

@@ -10,7 +10,7 @@
         "TopicCompany": "company",
         "TopicCustomer": "customer",
         "TopicLogin": "login",
-        "Brokers": "localhost:9092",
+        "Brokers": "kafka:9092",
         "RetryMax": 5,
         "RequiredAcks": -1,
         "Successes": true,

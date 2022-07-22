@@ -13,6 +13,6 @@ func Initialize(cfg *config.Config) {
 	del := delivery.NewDelivery(srv)
 
 	go del.ConsumerForCompany(cfg)
-	go del.ConsumerForCustomer(cfg)
+	//go del.ConsumerForCustomer(cfg)
 	del.Produce(cfg)
 }

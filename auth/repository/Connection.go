@@ -3,7 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	"os"
+	"github.com/mrbelka12000/netfix/auth/config"
 )
 
 var (
@@ -38,14 +38,10 @@ func connectToDB() *sql.DB {
 }
 
 func getConnectionString() string {
-	connStrForHeroku := os.Getenv("DATABASE_URL")
-	if connStrForHeroku != "" {
-		return connStrForHeroku
-	}
-
+	cfg := config.GetConf()
 	connStrForDocker := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
-		os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_DB"))
+		cfg.Postgres.POSTGRES_USER, cfg.Postgres.POSTGRES_PASSWORD,
+		cfg.Postgres.POSTGRES_HOST, cfg.Postgres.POSTGRES_PORT,
+		cfg.Postgres.POSTGRES_DB)
 	return connStrForDocker
 }
