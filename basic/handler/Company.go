@@ -10,6 +10,8 @@ import (
 )
 
 func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	cfg := config.GetConf()
 	m := &models.General{}
 
@@ -20,9 +22,8 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m.UUID = tools.GetRandomString()
-	jsonB, _ := json.Marshal(m)
 
-	err = delivery.Publish(string(jsonB), cfg.Kafka.TopicCompany)
+	err = delivery.Publish(tools.MakeJsonString(m), cfg.Kafka.TopicCompany)
 	if err != nil {
 		http.Error(w, "service unavailable", 500)
 		return
@@ -34,5 +35,6 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("OKEY"))
+	sess := models.Session{Cookie: m.UUID}
+	w.Write([]byte(tools.MakeJsonString(sess)))
 }

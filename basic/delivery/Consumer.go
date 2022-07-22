@@ -20,17 +20,18 @@ func Consumer(topic, uuid string) error {
 
 	reader := kafka.NewReader(conf)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	for {
 		m, err := reader.ReadMessage(ctx)
 		if err != nil {
 			fmt.Println("Error while reading from consumer: ", err)
+			return errors.New("лимит ожидания закончился")
 		}
 
 		fmt.Println(len(m.Value))
 		if len(m.Value) != 0 {
-			fmt.Printf("Message from %v is %v \n", topic, string(m.Value))
+			fmt.Printf("Message from %v is %v, uuid = %v\n", topic, string(m.Value), uuid)
 			if string(m.Value) != uuid {
 				continue
 			}

@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/mrbelka12000/netfix/auth/config"
 	"github.com/mrbelka12000/netfix/auth/models"
+	"github.com/mrbelka12000/netfix/auth/redis"
+	"github.com/mrbelka12000/netfix/auth/tools"
 	"github.com/segmentio/kafka-go"
 	"log"
 )
@@ -40,6 +42,7 @@ func (d *Delivery) ConsumerForCompany() {
 			log.Println("registration error: " + err.Error())
 			continue
 		}
+
 		err = d.srv.RegisterCompany(&models.Company{ID: id, WorkField: gen.WorkField})
 		if err != nil {
 			log.Println("registration error: " + err.Error())
@@ -47,9 +50,18 @@ func (d *Delivery) ConsumerForCompany() {
 		}
 
 		log.Println("successfully created")
+
+		role := models.Role{ID: id, UserType: models.Cmp}
+		err = redis.SetValue(gen.UUID, tools.MakeJsonString(role))
+		if err != nil {
+			log.Println("may be panic? :" + err.Error())
+			continue
+		}
+
 		err = publish(gen.UUID, cfg.Kafka.TopicAuth)
 		if err != nil {
 			log.Println(err.Error())
+			continue
 		}
 	}
 }
@@ -90,5 +102,20 @@ func (d *Delivery) ConsumerForCustomer() {
 			continue
 		}
 
+		log.Println("successfully created")
+
+		role := models.Role{ID: id, UserType: models.Cust}
+		jsonB, _ := json.Marshal(role)
+		err = redis.SetValue(gen.UUID, string(jsonB))
+		if err != nil {
+			log.Println("may be panic? :" + err.Error())
+			continue
+		}
+
+		err = publish(gen.UUID, cfg.Kafka.TopicAuth)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
 	}
 }

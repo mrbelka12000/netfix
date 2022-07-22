@@ -6,6 +6,7 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/mrbelka12000/netfix/auth/config"
 	"log"
+	"time"
 )
 
 func SetValue(key, value string) error {
@@ -15,7 +16,7 @@ func SetValue(key, value string) error {
 		return errors.New("не удалось получить клиента для редис")
 	}
 
-	err := c.Set(key, value, 0).Err()
+	err := c.Set(key, value, 3600*time.Second).Err()
 	if err != nil {
 		log.Println("сan not set value: " + err.Error())
 		return err

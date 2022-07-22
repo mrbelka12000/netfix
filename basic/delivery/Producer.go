@@ -25,6 +25,7 @@ func initProducer() (sarama.SyncProducer, error) {
 
 	return prd, err
 }
+
 func Publish(message, topic string) error {
 	producer, err := initProducer()
 	if err != nil {

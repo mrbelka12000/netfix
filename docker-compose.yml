@@ -70,7 +70,6 @@ services:
     volumes:
       - basic:/usr/src/app/
     depends_on:
-      - postgres
       - kafka
       - redis
     networks:

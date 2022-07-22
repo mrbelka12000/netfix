@@ -30,7 +30,7 @@ func GetValue(key string) (string, error) {
 		log.Println("не удалось получить клиента для редис")
 		return "", errors.New("не удалось получить клиента для редис")
 	}
-	val, err := c.Get("ping").Result()
+	val, err := c.Get(key).Result()
 	if err != nil {
 		log.Println("can not get value: " + err.Error())
 		return "", err

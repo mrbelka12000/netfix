@@ -6,10 +6,13 @@ import (
 	"github.com/mrbelka12000/netfix/basic/delivery"
 	"github.com/mrbelka12000/netfix/basic/models"
 	"github.com/mrbelka12000/netfix/basic/tools"
+	"log"
 	"net/http"
 )
 
 func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	cfg := config.GetConf()
 	m := &models.General{}
 
@@ -20,9 +23,8 @@ func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	m.UUID = tools.GetRandomString()
-	jsonB, _ := json.Marshal(m)
 
-	err = delivery.Publish(string(jsonB), cfg.Kafka.TopicCustomer)
+	err = delivery.Publish(tools.MakeJsonString(m), cfg.Kafka.TopicCustomer)
 	if err != nil {
 		http.Error(w, "service unavailable", 500)
 		return
@@ -30,9 +32,10 @@ func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 
 	err = delivery.Consumer(cfg.Kafka.TopicAuth, m.UUID)
 	if err != nil {
+		log.Println(err.Error())
 		http.Error(w, "service unavailable", 500)
 		return
 	}
-
-	w.Write([]byte("OKEY"))
+	sess := models.Session{Cookie: m.UUID}
+	w.Write([]byte(tools.MakeJsonString(sess)))
 }
