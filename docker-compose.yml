@@ -31,7 +31,7 @@ services:
       - netfix
   postgres:
     image: postgres:latest
-    container_name: postgres
+    container_name: postgres_auth
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mrbelka12000
