@@ -4,21 +4,23 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/mrbelka12000/netfix/auth/config"
+	"sync"
 )
 
 var (
-	alive bool
-	conn  *sql.DB
+	conn *sql.DB
+	once sync.Once
 )
 
+//GetConnection singleton implementation.
 func GetConnection() *sql.DB {
-	if alive {
-		return conn
-	}
-	conn = connectToDB()
-	if !alive {
-		panic("where is my connection!!!!!!!!!")
-	}
+	once.Do(func() {
+		conn = connectToDB()
+		if conn == nil {
+			panic("where is my connection!!!!!!!!!")
+		}
+	})
+
 	return conn
 }
 
@@ -33,7 +35,6 @@ func connectToDB() *sql.DB {
 		return nil
 	}
 
-	alive = true
 	return db
 }
 

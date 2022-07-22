@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/tkanos/gonfig"
+	"sync"
 )
 
 const cfgPath = "auth/config/config.json"
@@ -27,19 +28,19 @@ type Config struct {
 }
 
 var (
-	cfg    *Config
-	exists bool
+	cfg  *Config
+	once sync.Once
 )
 
+//GetConf singleton implementation.
 func GetConf() *Config {
-	if exists {
-		return cfg
-	}
+	once.Do(func() {
+		cfg = parseConf()
+		if cfg == nil {
+			panic("bad config")
+		}
+	})
 
-	cfg = parseConf()
-	if !exists {
-		panic("bad config")
-	}
 	return cfg
 }
 
@@ -51,6 +52,5 @@ func parseConf() *Config {
 		return nil
 	}
 
-	exists = true
 	return cfg
 }
