@@ -39,3 +39,7 @@ func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	sess := models.Session{Cookie: m.UUID}
 	w.Write([]byte(tools.MakeJsonString(sess)))
 }
+
+func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
+
+}

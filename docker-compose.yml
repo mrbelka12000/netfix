@@ -31,7 +31,7 @@ services:
       - netfix
   postgres:
     image: postgres:latest
-    container_name: postgres_auth
+    container_name: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mrbelka12000
@@ -40,7 +40,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - database_postgres:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
     networks:
       - netfix
   auth:
@@ -71,6 +71,7 @@ services:
       - basic:/usr/src/app/
     depends_on:
       - kafka
+      - postgres
       - redis
     networks:
       - netfix
@@ -78,7 +79,7 @@ services:
 volumes:
   auth:
   basic:
-  database_postgres:
+  postgres:
 
 # Networks to be created to facilitate communication between containers
 networks:

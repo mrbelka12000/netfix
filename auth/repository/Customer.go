@@ -35,5 +35,6 @@ func (rc *repoCustomer) RegisterCustomer(customer *models.Customer) error {
 		return err
 	}
 
+	log.Println("customer successfully created")
 	return nil
 }

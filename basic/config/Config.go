@@ -9,7 +9,15 @@ const cfgPath = "basic/config/config.json"
 
 type config struct {
 	App struct {
-		Port string
+		Port     string
+		SchemaUp string
+	}
+	Postgres struct {
+		POSTGRES_DB       string
+		POSTGRES_HOST     string
+		POSTGRES_PASSWORD string
+		POSTGRES_PORT     string
+		POSTGRES_USER     string
 	}
 	Redis struct {
 		Host string

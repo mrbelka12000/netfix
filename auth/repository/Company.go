@@ -24,5 +24,7 @@ func (rc *repoCompany) RegisterCompany(company *models.Company) error {
 		log.Println("company register error: " + err.Error())
 		return err
 	}
+
+	log.Println("company successfully created")
 	return nil
 }

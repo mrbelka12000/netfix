@@ -1,8 +1,12 @@
 package service
 
-import "github.com/mrbelka12000/netfix/basic/repository"
+import (
+	"github.com/mrbelka12000/netfix/basic/models"
+	"github.com/mrbelka12000/netfix/basic/repository"
+)
 
 type Company interface {
+	CreateWork(work *models.CreateWork) error
 }
 
 type Customer interface {

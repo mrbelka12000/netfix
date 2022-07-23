@@ -5,6 +5,7 @@ import (
 	"github.com/mrbelka12000/netfix/basic/config"
 	"github.com/mrbelka12000/netfix/basic/delivery"
 	"github.com/mrbelka12000/netfix/basic/models"
+	"github.com/mrbelka12000/netfix/basic/redis"
 	"github.com/mrbelka12000/netfix/basic/tools"
 	"net/http"
 )
@@ -37,4 +38,45 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 
 	sess := models.Session{Cookie: m.UUID}
 	w.Write([]byte(tools.MakeJsonString(sess)))
+}
+
+func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	c := r.Header.Get("session")
+	ut := &models.Role{}
+	jsonB, err := redis.GetValue(c)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	err = json.Unmarshal([]byte(jsonB), &ut)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	if ut.UserType != models.Cmp {
+		http.Error(w, "only companies can create service", http.StatusForbidden)
+		return
+	}
+
+	cw := &models.CreateWork{}
+	err = json.NewDecoder(r.Body).Decode(&cw)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	cw.CompanyID = ut.ID
+
+	err = h.srv.CreateWork(cw)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("OKEY"))
 }

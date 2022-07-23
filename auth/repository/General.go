@@ -23,9 +23,10 @@ func (ng *repoGeneral) Register(gen *models.General) (int, error) {
 		id
 `, gen.Email, gen.Password, gen.Username).Scan(&gen.ID)
 	if err != nil {
-		log.Println("General register error: " + err.Error())
+		log.Println("general user register error: " + err.Error())
 		return 0, err
 	}
 
+	log.Println("general user successfully created")
 	return gen.ID, nil
 }
