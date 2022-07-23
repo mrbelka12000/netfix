@@ -16,3 +16,7 @@ func newCompany(repo *repository.Repository) *srvCompany {
 func (sc *srvCompany) CreateWork(work *models.CreateWork) error {
 	return sc.repo.CreateWork(work)
 }
+
+func (sc *srvCompany) GetWorkStatus(workID int) (bool, error) {
+	return sc.repo.GetWorkStatus(workID)
+}

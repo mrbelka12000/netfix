@@ -7,6 +7,7 @@ import (
 	"github.com/mrbelka12000/netfix/basic/models"
 	"github.com/mrbelka12000/netfix/basic/redis"
 	"github.com/mrbelka12000/netfix/basic/tools"
+	"log"
 	"net/http"
 )
 
@@ -47,17 +48,20 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 	ut := &models.Role{}
 	jsonB, err := redis.GetValue(c)
 	if err != nil {
+		log.Println("no value in redis: " + err.Error())
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	err = json.Unmarshal([]byte(jsonB), &ut)
 	if err != nil {
+		log.Println("unmarshall error: " + err.Error())
 		http.Error(w, err.Error(), 500)
 		return
 	}
 
 	if ut.UserType != models.Cmp {
+		log.Println("forbidden customer company")
 		http.Error(w, "only companies can create service", http.StatusForbidden)
 		return
 	}
@@ -65,6 +69,7 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 	cw := &models.CreateWork{}
 	err = json.NewDecoder(r.Body).Decode(&cw)
 	if err != nil {
+		log.Println("decode error: " + err.Error())
 		http.Error(w, err.Error(), 400)
 		return
 	}
@@ -73,6 +78,7 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 
 	err = h.srv.CreateWork(cw)
 	if err != nil {
+		log.Println("create work error: " + err.Error())
 		http.Error(w, err.Error(), 400)
 		return
 	}
