@@ -2,10 +2,11 @@ package database
 
 import (
 	"fmt"
-	"github.com/mrbelka12000/netfix/auth/config"
-	"github.com/mrbelka12000/netfix/auth/repository"
 	"io/ioutil"
 	"log"
+
+	"github.com/mrbelka12000/netfix/auth/config"
+	"github.com/mrbelka12000/netfix/auth/internal/repository"
 )
 
 func Up() {

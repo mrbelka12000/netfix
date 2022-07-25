@@ -1,16 +1,18 @@
 package config
 
 import (
-	"github.com/tkanos/gonfig"
 	"sync"
+
+	"github.com/tkanos/gonfig"
 )
 
 const cfgPath = "basic/config/config.json"
 
 type config struct {
 	App struct {
-		Port     string
-		SchemaUp string
+		Port       string
+		SchemaUp   string
+		SchemaDown string
 	}
 	Postgres struct {
 		POSTGRES_DB       string
@@ -40,7 +42,7 @@ var (
 	once sync.Once
 )
 
-//GetConf singleton implementation.
+// GetConf singleton implementation.
 func GetConf() *config {
 	once.Do(func() {
 		cfg = parseConf()

@@ -81,7 +81,6 @@ volumes:
   basic:
   postgres:
 
-# Networks to be created to facilitate communication between containers
 networks:
   netfix:
     driver: bridge

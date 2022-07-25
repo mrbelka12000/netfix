@@ -1,7 +1,8 @@
 {
   "App": {
     "Port": "8081",
-    "SchemaUp": "basic/database/up"
+    "SchemaUp": "basic/database/up",
+    "SchemaDown": "basic/database/down"
   },
   "Postgres": {
     "POSTGRES_DB": "postgres",
