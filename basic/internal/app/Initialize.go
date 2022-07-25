@@ -3,7 +3,6 @@ package app
 import (
 	"log"
 
-	"github.com/mrbelka12000/netfix/basic/database"
 	"github.com/mrbelka12000/netfix/basic/internal/handler"
 	"github.com/mrbelka12000/netfix/basic/internal/repository"
 	"github.com/mrbelka12000/netfix/basic/internal/routes"
@@ -17,7 +16,7 @@ func Initialize() {
 	h := handler.NewHandler(srv)
 	router := routes.SetUpMux(h)
 	s := server.NewServer(router)
-	database.Up()
+	//database.Up()
 
 	err := s.ListenAndServe()
 	if err != nil {

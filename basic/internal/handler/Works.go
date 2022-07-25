@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/mrbelka12000/netfix/basic/models"
 	"log"
 	"net/http"
 	"strconv"
@@ -9,6 +10,15 @@ import (
 	"github.com/mrbelka12000/netfix/basic/tools"
 )
 
+// GetWorkFields example
+// @Summary get all work fields
+// @ID  work fields
+// @Tags service
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} workFields "okey"
+// @Failure 400,404,405,500
+// @Router /workfields [get]
 func (h *Handler) GetWorkFields(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	works, err := h.srv.GetWorkFields()
@@ -20,6 +30,15 @@ func (h *Handler) GetWorkFields(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(tools.MakeJsonString(works)))
 }
 
+// GetWork example
+// @Summary get work by id
+// @ID  get work
+// @Tags service
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} work "okey"
+// @Failure 400,404,405,500
+// @Router  /service/{id} [get]
 func (h *Handler) GetWork(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -46,4 +65,12 @@ func (h *Handler) GetWork(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte(tools.MakeJsonString(work)))
+}
+
+type workFields struct {
+	*models.SwaggerWorkFields
+}
+
+type work struct {
+	*models.Work
 }

@@ -14,6 +14,17 @@ import (
 
 const busy = true
 
+// RegisterCustomer example
+// @Summary Register new customer
+// @Description registration
+// @Tags auth
+// @ID auth_customer
+// @Accept  json
+// @Produce  json
+// @Param input body customerReg true "registration"
+// @Success 200 {object} session
+// @Failure 400,404,405,500
+// @Router /register/customer [post]
 func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -68,6 +79,16 @@ func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(tools.MakeJsonString(sess)))
 }
 
+// ApplyForWork example
+// @Summary apply for service
+// @ID apply for work
+// @Tags service
+// @Accept  json
+// @Produce  json
+// @Param input body workAction true "work"
+// @Success 200 {string} string	"OKEY"
+// @Failure 400,404,405,500
+// @Router /service/apply [post]
 func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -129,6 +150,16 @@ func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OKEY"))
 }
 
+// FinishWork example
+// @Summary finish work
+// @ID finish work
+// @Tags service
+// @Accept  json
+// @Produce  json
+// @Param input body workAction true "finished"
+// @Success 200 {string} string	"OKEY"
+// @Failure 400,404,405,500
+// @Router /service/finish [post]
 func (h *Handler) FinishWork(w http.ResponseWriter, r *http.Request) {
 
 	c := r.Header.Get("session")
@@ -176,4 +207,12 @@ func (h *Handler) FinishWork(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("finished"))
+}
+
+type customerReg struct {
+	*models.SwaggerCustomerRegister
+}
+
+type workAction struct {
+	*models.SwaggerWorkAction
 }

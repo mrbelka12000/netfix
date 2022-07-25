@@ -1,0 +1,287 @@
+basePath: /
+definitions:
+  handler.companyReg:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+      workField:
+        type: string
+    type: object
+  handler.customerReg:
+    properties:
+      birth:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.session:
+    properties:
+      cookie:
+        type: string
+      id:
+        type: integer
+    type: object
+  handler.work:
+    properties:
+      ID:
+        type: integer
+      companyID:
+        type: integer
+      companyName:
+        type: string
+      date:
+        type: string
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      workField:
+        type: string
+    type: object
+  handler.workAction:
+    properties:
+      workID:
+        type: integer
+    type: object
+  handler.workCreate:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      workField:
+        type: string
+    type: object
+  handler.workFields:
+    properties:
+      workFields:
+        items:
+          type: string
+        type: array
+    type: object
+host: localhost:8081
+info:
+  contact:
+    email: karshyga.beknur@gmail.com
+  description: API for hiring companies by their type of work
+  title: net-fix
+  version: "1.0"
+paths:
+  /register/company:
+    post:
+      consumes:
+      - application/json
+      description: registration
+      operationId: auth_company
+      parameters:
+      - description: registration
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.companyReg'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.session'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: register new customer
+      tags:
+      - auth
+  /register/customer:
+    post:
+      consumes:
+      - application/json
+      description: registration
+      operationId: auth_customer
+      parameters:
+      - description: registration
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.customerReg'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.session'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: Register new customer
+      tags:
+      - auth
+  /service:
+    post:
+      consumes:
+      - application/json
+      description: 'choose one of work field: Air Conditioner,Carpentry,Electricity,Gardening,Home
+        Machines,Housekeeping,Interior Design,Locks,Painting,Plumbing,Water Heaters'
+      operationId: create work
+      parameters:
+      - description: service
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.workCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: OKEY
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: create new service/work
+      tags:
+      - service
+  /service/{id}:
+    get:
+      consumes:
+      - application/json
+      operationId: get work
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: okey
+          schema:
+            $ref: '#/definitions/handler.work'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: get work by id
+      tags:
+      - service
+  /service/apply:
+    post:
+      consumes:
+      - application/json
+      operationId: apply for work
+      parameters:
+      - description: work
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.workAction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OKEY
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: apply for service
+      tags:
+      - service
+  /service/finish:
+    post:
+      consumes:
+      - application/json
+      operationId: finish work
+      parameters:
+      - description: finished
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.workAction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OKEY
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: finish work
+      tags:
+      - service
+  /workfields:
+    get:
+      consumes:
+      - application/json
+      operationId: work fields
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: okey
+          schema:
+            $ref: '#/definitions/handler.workFields'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: get all work fields
+      tags:
+      - service
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: session
+    type: apiKey
+swagger: "2.0"

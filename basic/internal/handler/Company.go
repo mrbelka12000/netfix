@@ -12,6 +12,17 @@ import (
 	"github.com/mrbelka12000/netfix/basic/tools"
 )
 
+// RegisterCompany example
+// @Summary register new customer
+// @Description registration
+// @Tags auth
+// @ID auth_company
+// @Accept  json
+// @Produce  json
+// @Param input body companyReg true "registration"
+// @Success 200 {object} session
+// @Failure 400,404,405,500
+// @Router /register/company [post]
 func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -65,6 +76,17 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(tools.MakeJsonString(sess)))
 }
 
+// CreateService example
+// @Summary create new service/work
+// @Description choose one of work field: Air Conditioner,Carpentry,Electricity,Gardening,Home Machines,Housekeeping,Interior Design,Locks,Painting,Plumbing,Water Heaters
+// @ID create work
+// @Tags service
+// @Accept  json
+// @Produce  json
+// @Param input body workCreate true "service"
+// @Success 201 {string} string	"OKEY"
+// @Failure 400,404,405,500
+// @Router /service [post]
 func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -115,4 +137,15 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("OKEY"))
+}
+
+type companyReg struct {
+	*models.SwaggerCompanyRegister
+}
+
+type workCreate struct {
+	*models.SwaggerWorkCreate
+}
+type session struct {
+	*models.Session
 }
