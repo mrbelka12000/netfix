@@ -75,6 +75,13 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	exists := h.srv.IsExists(cw.WorkField)
+	if !exists {
+		log.Println("unknown work field: " + cw.WorkField)
+		http.Error(w, "unknown work field", 400)
+		return
+	}
+
 	cw.CompanyID = ut.ID
 
 	err = h.srv.CreateWork(cw)

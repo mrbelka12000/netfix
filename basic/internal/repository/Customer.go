@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"github.com/mrbelka12000/netfix/basic/models"
 	"log"
+
+	"github.com/mrbelka12000/netfix/basic/models"
+	"github.com/mrbelka12000/netfix/basic/tools"
 )
 
-type repoCustomer struct {
-}
+type repoCustomer struct{}
 
 func newCustomer() *repoCustomer {
 	return &repoCustomer{}
@@ -23,10 +24,10 @@ func (rc *repoCustomer) ApplyForWork(apply *models.ApplyForWork) error {
 	defer tx.Commit()
 	_, err = tx.Exec(`
 	INSERT INTO apply
-		(customerid, workID)
+		(customerid, workID, Start)
 	VALUES 
-		($1,$2)
-`, apply.CustomerID, apply.WorkID)
+		($1,$2,$3)
+`, apply.CustomerID, apply.WorkID, tools.GetUnixDate())
 	if err != nil {
 		tx.Rollback()
 		log.Println("apply for work error: " + err.Error())

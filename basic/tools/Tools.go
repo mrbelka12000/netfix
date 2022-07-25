@@ -3,6 +3,8 @@ package tools
 import (
 	"bytes"
 	"encoding/json"
+	"time"
+
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -20,4 +22,11 @@ func MakeJsonString(value interface{}) string {
 	e.SetEscapeHTML(false)
 	e.Encode(value)
 	return bf.String()
+}
+
+func GetUnixDate() int64 {
+	loc, _ := time.LoadLocation("Asia/Almaty")
+	now := time.Now().In(loc).Unix()
+
+	return now
 }

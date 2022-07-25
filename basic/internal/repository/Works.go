@@ -46,3 +46,23 @@ func (rw *repoWorks) GetWorkFields() (*models.WorkFields, error) {
 	}
 	return wf, nil
 }
+
+func (rw *repoWorks) IsExists(workField string) bool {
+	conn := GetConnection()
+
+	check := ""
+	err := conn.QueryRow(`
+	SELECT 
+		WORKFIELD
+	FROM
+		WORKFIELDS
+	WHERE
+		workfield = $1
+`, workField).Scan(&check)
+	if err != nil {
+		log.Println("can not find work field: " + err.Error())
+		return false
+	}
+
+	return workField == check
+}

@@ -16,3 +16,7 @@ func newWorks(repo *repository.Repository) *srvWorks {
 func (sw *srvWorks) GetWorkFields() (*models.WorkFields, error) {
 	return sw.repo.GetWorkFields()
 }
+
+func (sw *srvWorks) IsExists(workField string) bool {
+	return sw.repo.IsExists(workField)
+}

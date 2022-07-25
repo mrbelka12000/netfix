@@ -18,6 +18,7 @@ type General interface{}
 
 type WorkFields interface {
 	GetWorkFields() (*models.WorkFields, error)
+	IsExists(workField string) bool
 }
 
 type Service struct {
