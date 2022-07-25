@@ -74,7 +74,7 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cw := &models.CreateWork{}
+	cw := &models.Work{}
 	err = json.NewDecoder(r.Body).Decode(&cw)
 	if err != nil {
 		log.Println("decode error: " + err.Error())

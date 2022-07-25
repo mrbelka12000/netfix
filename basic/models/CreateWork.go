@@ -2,7 +2,7 @@ package models
 
 import "errors"
 
-type CreateWork struct {
+type Work struct {
 	ID          int     `json:"ID"`
 	CompanyID   int     `json:"companyID"`
 	Name        string  `json:"name"`
@@ -10,9 +10,10 @@ type CreateWork struct {
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
 	Date        string  `json:"date"`
+	CompanyName string  `json:"companyName"`
 }
 
-func (cw *CreateWork) Validate() error {
+func (cw *Work) Validate() error {
 	if cw.Name == "" {
 		return errors.New("missing name")
 	}

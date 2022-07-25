@@ -13,7 +13,7 @@ func newCompany() *repoCompany {
 	return &repoCompany{}
 }
 
-func (rc *repoCompany) CreateWork(work *models.CreateWork) error {
+func (rc *repoCompany) CreateWork(work *models.Work) error {
 
 	conn := GetConnection()
 

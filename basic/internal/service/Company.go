@@ -13,7 +13,7 @@ func newCompany(repo *repository.Repository) *srvCompany {
 	return &srvCompany{repo}
 }
 
-func (sc *srvCompany) CreateWork(work *models.CreateWork) error {
+func (sc *srvCompany) CreateWork(work *models.Work) error {
 	return sc.repo.CreateWork(work)
 }
 

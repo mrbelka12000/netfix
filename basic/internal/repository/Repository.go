@@ -3,7 +3,7 @@ package repository
 import "github.com/mrbelka12000/netfix/basic/models"
 
 type Company interface {
-	CreateWork(work *models.CreateWork) error
+	CreateWork(work *models.Work) error
 	GetWorkStatus(workID int) (bool, error)
 }
 
@@ -13,23 +13,24 @@ type Customer interface {
 
 type General interface{}
 
-type WorkFields interface {
+type Work interface {
 	GetWorkFields() (*models.WorkFields, error)
 	IsExists(workField string) bool
+	GetByID(id int) (*models.Work, error)
 }
 
 type Repository struct {
 	Company
 	Customer
 	General
-	WorkFields
+	Work
 }
 
 func NewRepo() *Repository {
 	return &Repository{
-		Company:    newCompany(),
-		Customer:   newCustomer(),
-		General:    newGeneral(),
-		WorkFields: newWorks(),
+		Company:  newCompany(),
+		Customer: newCustomer(),
+		General:  newGeneral(),
+		Work:     newWorks(),
 	}
 }

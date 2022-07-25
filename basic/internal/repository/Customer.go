@@ -24,7 +24,7 @@ func (rc *repoCustomer) ApplyForWork(apply *models.ApplyForWork) error {
 	defer tx.Commit()
 	_, err = tx.Exec(`
 	INSERT INTO apply
-		(customerid, workID, Start)
+		(customerid, workID, Startdate)
 	VALUES 
 		($1,$2,$3)
 `, apply.CustomerID, apply.WorkID, tools.GetUnixDate())
