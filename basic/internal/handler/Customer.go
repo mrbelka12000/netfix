@@ -28,6 +28,13 @@ func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 
 	m.UUID = tools.GetRandomString()
 
+	err = m.Validate()
+	if err != nil {
+		log.Println("validate customer error: " + err.Error())
+		http.Error(w, "validate customer error", 400)
+		return
+	}
+
 	err = delivery.Publish(tools.MakeJsonString(m), cfg.Kafka.TopicCustomer)
 	if err != nil {
 		http.Error(w, "service unavailable", 500)

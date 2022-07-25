@@ -26,6 +26,13 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 
 	m.UUID = tools.GetRandomString()
 
+	err = m.Validate()
+	if err != nil {
+		log.Println("validate company error: " + err.Error())
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
 	err = delivery.Publish(tools.MakeJsonString(m), cfg.Kafka.TopicCompany)
 	if err != nil {
 		http.Error(w, "service unavailable", 500)
@@ -72,6 +79,13 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("decode error: " + err.Error())
 		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	err = cw.Validate()
+	if err != nil {
+		log.Println("validate create work error: " + err.Error())
+		http.Error(w, "validate create work error", 400)
 		return
 	}
 
