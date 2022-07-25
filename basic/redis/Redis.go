@@ -1,10 +1,12 @@
 package redis
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
 	"github.com/mrbelka12000/netfix/auth/config"
+	"github.com/mrbelka12000/netfix/basic/models"
 	"log"
 )
 
@@ -54,4 +56,22 @@ func getClient() *redis.Client {
 		return nil
 	}
 	return client
+}
+
+func GetUserType(session string) (*models.Role, error) {
+	ut := &models.Role{}
+
+	jsonB, err := GetValue(session)
+	if err != nil {
+		log.Println("no value in redis: " + err.Error())
+		return nil, err
+	}
+
+	err = json.Unmarshal([]byte(jsonB), &ut)
+	if err != nil {
+		log.Println("unmarshall error: " + err.Error())
+		return nil, err
+	}
+
+	return ut, nil
 }

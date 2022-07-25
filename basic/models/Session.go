@@ -1,5 +1,6 @@
 package models
 
 type Session struct {
-	Cookie string
+	ID     int    `json:"id"`
+	Cookie string `json:"cookie"`
 }

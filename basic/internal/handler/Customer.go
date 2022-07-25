@@ -41,13 +41,30 @@ func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = delivery.Consumer(cfg.Kafka.TopicAuth, m.UUID)
+	gen, err := delivery.Consumer(cfg.Kafka.TopicAuth, m.UUID)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, "service unavailable", 500)
 		return
 	}
-	sess := models.Session{Cookie: m.UUID}
+
+	wallet := &models.Wallet{OwnerID: gen.ID, UUID: m.UUID}
+
+	err = delivery.Publish(tools.MakeJsonString(wallet), cfg.Kafka.TopicWallets)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	_, err = delivery.Consumer(cfg.Kafka.TopicCreateWallet, m.UUID)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	sess := models.Session{ID: gen.ID, Cookie: m.UUID}
 	w.Write([]byte(tools.MakeJsonString(sess)))
 }
 
@@ -55,17 +72,9 @@ func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	c := r.Header.Get("session")
-	ut := &models.Role{}
-	jsonB, err := redis.GetValue(c)
-	if err != nil {
-		log.Println("no value in redis: " + err.Error())
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
-	err = json.Unmarshal([]byte(jsonB), &ut)
+	ut, err := redis.GetUserType(c)
 	if err != nil {
-		log.Println("unmarshall error: " + err.Error())
 		http.Error(w, err.Error(), 500)
 		return
 	}
@@ -76,21 +85,21 @@ func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ap := &models.ApplyForWork{}
+	wa := &models.WorkActions{}
 
-	err = json.NewDecoder(r.Body).Decode(&ap)
+	err = json.NewDecoder(r.Body).Decode(&wa)
 	if err != nil {
 		log.Println("decode error: " + err.Error())
 		http.Error(w, err.Error(), 400)
 		return
 	}
 
-	ap.CustomerID = ut.ID
-	status, err := h.srv.GetWorkStatus(ap.WorkID)
+	wa.CustomerID = ut.ID
+	status, err := h.srv.GetWorkStatus(wa.WorkID)
 	if err != nil {
 		log.Println("did not find a work: " + err.Error())
 
-		err = h.srv.ApplyForWork(ap)
+		err = h.srv.ApplyForWork(wa)
 		if err != nil {
 			log.Println("apply for work error: " + err.Error())
 			http.Error(w, err.Error(), 400)
@@ -108,7 +117,7 @@ func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.srv.ApplyForWork(ap)
+	err = h.srv.ApplyForWork(wa)
 	if err != nil {
 		log.Println("apply for work error: " + err.Error())
 		http.Error(w, err.Error(), 400)
@@ -118,4 +127,53 @@ func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 	log.Println("successfully applied for work")
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("OKEY"))
+}
+
+func (h *Handler) FinishWork(w http.ResponseWriter, r *http.Request) {
+
+	c := r.Header.Get("session")
+
+	ut, err := redis.GetUserType(c)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	if ut.UserType != models.Cust {
+		log.Println("forbidden for company")
+		http.Error(w, "only customer can apply for work", http.StatusForbidden)
+		return
+	}
+
+	wa := &models.WorkActions{}
+	err = json.NewDecoder(r.Body).Decode(&wa)
+	if err != nil {
+		log.Println("decode error: " + err.Error())
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	wa.CustomerID = ut.ID
+
+	status, err := h.srv.GetWorkStatus(wa.WorkID)
+	if err != nil {
+		log.Println("get work status error: " + err.Error())
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	if status != busy {
+		log.Println("the work cannot end because it is not active")
+		http.Error(w, "can not finish work", 400)
+		return
+	}
+
+	err = h.srv.FinishWork(wa)
+	if err != nil {
+		log.Println("finish work error: " + err.Error())
+		http.Error(w, err.Error(), 400)
+		return
+	}
+
+	w.Write([]byte("finished"))
 }

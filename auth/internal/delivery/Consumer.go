@@ -38,6 +38,7 @@ func (d *Delivery) ConsumerForCompany() {
 			log.Println("unmarshall error: " + err.Error())
 			continue
 		}
+
 		id, err := d.srv.Register(gen)
 		if err != nil {
 			log.Println("registration error: " + err.Error())
@@ -59,7 +60,8 @@ func (d *Delivery) ConsumerForCompany() {
 			continue
 		}
 
-		err = publish(gen.UUID, cfg.Kafka.TopicAuth)
+		gen.ID = id
+		err = publish(tools.MakeJsonString(gen), cfg.Kafka.TopicAuth)
 		if err != nil {
 			log.Println(err.Error())
 			continue
@@ -91,6 +93,7 @@ func (d *Delivery) ConsumerForCustomer() {
 			log.Println("unmarshall error: " + err.Error())
 			continue
 		}
+
 		id, err := d.srv.Register(gen)
 		if err != nil {
 			log.Println("registration error: " + err.Error())
@@ -106,14 +109,14 @@ func (d *Delivery) ConsumerForCustomer() {
 		log.Println("successfully created")
 
 		role := models.Role{ID: id, UserType: models.Cust}
-		jsonB, _ := json.Marshal(role)
-		err = redis.SetValue(gen.UUID, string(jsonB))
+		err = redis.SetValue(gen.UUID, tools.MakeJsonString(role))
 		if err != nil {
 			log.Println("may be panic? :" + err.Error())
 			continue
 		}
 
-		err = publish(gen.UUID, cfg.Kafka.TopicAuth)
+		gen.ID = id
+		err = publish(tools.MakeJsonString(gen), cfg.Kafka.TopicAuth)
 		if err != nil {
 			log.Println(err.Error())
 			continue

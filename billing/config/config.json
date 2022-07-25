@@ -1,8 +1,7 @@
 {
   "App": {
-    "Port": "8081",
-    "SchemaUp": "basic/database/up",
-    "SchemaDown": "basic/database/down"
+    "SchemaUp": "billing/database/up",
+    "SchemaDown": "billing/database/down"
   },
   "Postgres": {
     "POSTGRES_DB": "postgres",
@@ -12,9 +11,6 @@
     "POSTGRES_USER": "postgres"
   },
   "Kafka": {
-    "TopicCompany": "company",
-    "TopicCustomer": "customer",
-    "TopicAuth": "auth",
     "TopicBilling": "billing",
     "TopicWallets": "wallets",
     "TopicCreateWallet": "createwallet",

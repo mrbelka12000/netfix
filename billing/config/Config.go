@@ -6,11 +6,10 @@ import (
 	"github.com/tkanos/gonfig"
 )
 
-const cfgPath = "basic/config/config.json"
+const cfgPath = "billing/config/config.json"
 
 type config struct {
 	App struct {
-		Port       string
 		SchemaUp   string
 		SchemaDown string
 	}
@@ -26,12 +25,9 @@ type config struct {
 		Prot string
 	}
 	Kafka struct {
-		TopicCompany      string
-		TopicCustomer     string
-		TopicAuth         string
 		TopicBilling      string
-		TopicWallets      string
 		TopicCreateWallet string
+		TopicWallets      string
 		Brokers           string
 		RetryMax          int
 		RequiredAcks      int

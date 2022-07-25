@@ -11,7 +11,8 @@ type Company interface {
 }
 
 type Customer interface {
-	ApplyForWork(apply *models.ApplyForWork) error
+	ApplyForWork(work *models.WorkActions) error
+	FinishWork(work *models.WorkActions) error
 }
 
 type General interface{}

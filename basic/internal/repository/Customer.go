@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"log"
 
 	"github.com/mrbelka12000/netfix/basic/models"
@@ -13,7 +14,7 @@ func newCustomer() *repoCustomer {
 	return &repoCustomer{}
 }
 
-func (rc *repoCustomer) ApplyForWork(apply *models.ApplyForWork) error {
+func (rc *repoCustomer) ApplyForWork(work *models.WorkActions) error {
 	conn := GetConnection()
 
 	tx, err := conn.Begin()
@@ -27,7 +28,7 @@ func (rc *repoCustomer) ApplyForWork(apply *models.ApplyForWork) error {
 		(customerid, workID, Startdate)
 	VALUES 
 		($1,$2,$3)
-`, apply.CustomerID, apply.WorkID, tools.GetUnixDate())
+`, work.CustomerID, work.WorkID, tools.GetUnixDate())
 	if err != nil {
 		tx.Rollback()
 		log.Println("apply for work error: " + err.Error())
@@ -41,7 +42,7 @@ func (rc *repoCustomer) ApplyForWork(apply *models.ApplyForWork) error {
 			status=$1
 		where
 			workid=$2
-`, true, apply.WorkID)
+`, true, work.WorkID)
 	if err != nil {
 		tx.Rollback()
 		log.Println("apply for work error: " + err.Error())
@@ -49,5 +50,35 @@ func (rc *repoCustomer) ApplyForWork(apply *models.ApplyForWork) error {
 	}
 
 	log.Println("successfully applied for work")
+	return nil
+}
+
+func (rc *repoCustomer) FinishWork(work *models.WorkActions) error {
+	conn := GetConnection()
+
+	res, err := conn.Exec(`
+		UPDATE
+			apply
+		SET 
+		    enddate=$1
+		WHERE
+		    workId = $2 and customerId= $3
+`, tools.GetUnixDate(), work.WorkID, work.CustomerID)
+	if err != nil {
+		log.Println("finish work error: " + err.Error())
+		return err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("rows affected error: " + err.Error())
+		return err
+	}
+
+	if rows == 0 {
+		log.Println("no works to finish")
+		return errors.New("no works to finish")
+	}
+
 	return nil
 }

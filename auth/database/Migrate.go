@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/mrbelka12000/netfix/auth/config"
 	"github.com/mrbelka12000/netfix/auth/internal/repository"
@@ -26,7 +27,7 @@ func Up() {
 
 		if _, err = conn.Exec(string(body)); err != nil {
 			log.Println(fmt.Sprintf("Миграция %v не может отработать по причине %v", file.Name(), err.Error()))
-			continue
+			os.Exit(1)
 		}
 		log.Println(fmt.Sprintf("Миграция %v отработала успешно ", file.Name()))
 	}

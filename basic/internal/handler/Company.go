@@ -39,13 +39,29 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = delivery.Consumer(cfg.Kafka.TopicAuth, m.UUID)
+	gen, err := delivery.Consumer(cfg.Kafka.TopicAuth, m.UUID)
 	if err != nil {
 		http.Error(w, "service unavailable", 500)
 		return
 	}
 
-	sess := models.Session{Cookie: m.UUID}
+	wallet := &models.Wallet{OwnerID: gen.ID, UUID: m.UUID}
+	log.Println(wallet)
+	err = delivery.Publish(tools.MakeJsonString(wallet), cfg.Kafka.TopicWallets)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	_, err = delivery.Consumer(cfg.Kafka.TopicCreateWallet, m.UUID)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	sess := models.Session{ID: gen.ID, Cookie: m.UUID}
 	w.Write([]byte(tools.MakeJsonString(sess)))
 }
 
@@ -53,17 +69,9 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	c := r.Header.Get("session")
-	ut := &models.Role{}
-	jsonB, err := redis.GetValue(c)
-	if err != nil {
-		log.Println("no value in redis: " + err.Error())
-		http.Error(w, err.Error(), 500)
-		return
-	}
 
-	err = json.Unmarshal([]byte(jsonB), &ut)
+	ut, err := redis.GetUserType(c)
 	if err != nil {
-		log.Println("unmarshall error: " + err.Error())
 		http.Error(w, err.Error(), 500)
 		return
 	}

@@ -2,14 +2,17 @@ package delivery
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/mrbelka12000/netfix/basic/config"
+	"github.com/mrbelka12000/netfix/basic/models"
 	"github.com/segmentio/kafka-go"
+	"log"
 	"time"
 )
 
-func Consumer(topic, uuid string) error {
+func Consumer(topic, uuid string) (*models.General, error) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -26,18 +29,24 @@ func Consumer(topic, uuid string) error {
 		m, err := reader.ReadMessage(ctx)
 		if err != nil {
 			fmt.Println("Error while reading from consumer: ", err)
-			return errors.New("лимит ожидания закончился")
+			return nil, errors.New("лимит ожидания закончился")
 		}
 
-		fmt.Println(len(m.Value))
 		if len(m.Value) != 0 {
-			fmt.Printf("Message from %v is %v, uuid = %v\n", topic, string(m.Value), uuid)
-			if string(m.Value) != uuid {
+			gen := &models.General{}
+			fmt.Printf("Message from %v is %v uuid = %v\n", topic, string(m.Value), uuid)
+			err = json.Unmarshal(m.Value, &gen)
+			if err != nil {
+				log.Println(err.Error())
+				return nil, err
+			}
+			if gen.UUID != uuid {
+				log.Println("uuid does not match")
 				continue
 			}
-			return nil
+			return gen, nil
 		}
 		fmt.Println("No message from kafka")
-		return errors.New("пришло не известно что")
+		return nil, errors.New("пришло не известно что")
 	}
 }

@@ -73,7 +73,24 @@ services:
       - kafka
       - postgres
       - redis
+      - billing
       - auth
+    networks:
+      - netfix
+  billing:
+    container_name: billing
+    build:
+      dockerfile: billing/Dockerfile
+      context: .
+    ports:
+      - "8082:8082"
+    restart: on-failure
+    volumes:
+      - billing:/usr/src/app/
+    depends_on:
+      - kafka
+      - postgres
+      - redis
     networks:
       - netfix
 
@@ -81,6 +98,7 @@ volumes:
   auth:
   basic:
   postgres:
+  billing:
 
 networks:
   netfix:

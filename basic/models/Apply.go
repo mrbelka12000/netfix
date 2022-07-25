@@ -1,6 +1,6 @@
 package models
 
-type ApplyForWork struct {
+type WorkActions struct {
 	CustomerID int `json:"customerID"`
 	WorkID     int `json:"workID"`
 }

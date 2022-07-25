@@ -8,7 +8,8 @@ type Company interface {
 }
 
 type Customer interface {
-	ApplyForWork(apply *models.ApplyForWork) error
+	ApplyForWork(apply *models.WorkActions) error
+	FinishWork(work *models.WorkActions) error
 }
 
 type General interface{}
