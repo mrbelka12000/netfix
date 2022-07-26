@@ -16,3 +16,7 @@ func newCustomer(repo *repository.Repository) *srvCustomer {
 func (sc *srvCustomer) RegisterCustomer(customer *models.Customer) error {
 	return sc.repo.RegisterCustomer(customer)
 }
+
+func (sc *srvCustomer) GetByID(id int) (*models.General, error) {
+	return sc.repo.Customer.GetByID(id)
+}

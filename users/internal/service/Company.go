@@ -18,5 +18,5 @@ func (sc *srvCompany) RegisterCompany(company *models.Company) error {
 }
 
 func (sc *srvCompany) GetByID(id int) (*models.General, error) {
-	return sc.repo.GetByID(id)
+	return sc.repo.Company.GetByID(id)
 }

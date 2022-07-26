@@ -13,6 +13,7 @@ func Initialize() {
 
 	go del.ConsumerForCustomer()
 	go del.ConsumerForGetCompany()
+	go del.ConsumerForGetCustomer()
 	del.ConsumerForCompany()
 	// del.Produce()
 }

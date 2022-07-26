@@ -12,6 +12,7 @@ type Company interface {
 
 type Customer interface {
 	RegisterCustomer(customer *models.Customer) error
+	GetByID(id int) (*models.General, error)
 }
 
 type General interface {

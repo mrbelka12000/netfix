@@ -16,6 +16,7 @@
     "TopicCustomer": "customer",
     "TopicAuth": "auth",
     "TopicGetCompany": "getcompany",
+    "TopicGetCustomer": "getcustomer",
     "TopicUserGetResp": "getresp",
     "TopicBilling": "billing",
     "TopicWallets": "wallets",

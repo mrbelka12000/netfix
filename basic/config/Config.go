@@ -30,6 +30,7 @@ type config struct {
 		TopicCustomer     string
 		TopicAuth         string
 		TopicGetCompany   string
+		TopicGetCustomer  string
 		TopicUserGetResp  string
 		TopicBilling      string
 		TopicWallets      string

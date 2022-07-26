@@ -150,7 +150,48 @@ func (d *Delivery) ConsumerForGetCompany() {
 		}
 
 		uuid := gen.UUID
-		gen, err = d.srv.GetByID(gen.ID)
+		gen, err = d.srv.Company.GetByID(gen.ID)
+		if err != nil {
+			log.Println("get company by id error: " + err.Error())
+			continue
+		}
+		gen.UUID = uuid
+
+		err = publish(tools.MakeJsonString(gen), cfg.Kafka.TopicUserGetResp)
+		if err != nil {
+			log.Println(err.Error())
+		}
+	}
+}
+
+func (d *Delivery) ConsumerForGetCustomer() {
+	cfg := config.GetConf()
+
+	conf := kafka.ReaderConfig{
+		Brokers:  []string{cfg.Kafka.Brokers},
+		Topic:    cfg.Kafka.TopicGetCustomer,
+		MaxBytes: cfg.Kafka.MaxBytes,
+	}
+
+	reader := kafka.NewReader(conf)
+
+	for {
+
+		m, err := reader.ReadMessage(context.Background())
+		if err != nil {
+			log.Println("Error while reading from consumer: ", err)
+			continue
+		}
+
+		gen := &models.General{}
+		err = json.Unmarshal(m.Value, &gen)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		uuid := gen.UUID
+		gen, err = d.srv.Customer.GetByID(gen.ID)
 		if err != nil {
 			log.Println("get company by id error: " + err.Error())
 			continue

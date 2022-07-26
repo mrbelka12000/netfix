@@ -11,6 +11,7 @@
         "TopicCustomer": "customer",
         "TopicAuth": "auth",
         "TopicGetCompany": "getcompany",
+        "TopicGetCustomer": "getcustomer",
         "TopicUserGetResp": "getresp",
         "Brokers": "kafka:9092",
         "RetryMax": 5,

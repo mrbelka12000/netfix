@@ -42,5 +42,25 @@ func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 		}
 		w.Write([]byte(tools.MakeJsonString(g)))
 		return
+	case models.Cust:
+		g := &models.General{
+			ID:   ut.ID,
+			UUID: tools.GetRandomString(),
+		}
+		err = delivery.Publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetCustomer)
+		if err != nil {
+			log.Println("pushlish error: " + err.Error())
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		g, err = delivery.Consumer(cfg.Kafka.TopicUserGetResp, g.UUID)
+		if err != nil {
+			log.Println("consumer error: " + err.Error())
+			http.Error(w, "service unavailable", 500)
+			return
+		}
+		w.Write([]byte(tools.MakeJsonString(g)))
+		return
 	}
+
 }

@@ -20,6 +20,7 @@ type config struct {
 		TopicCustomer    string
 		TopicAuth        string
 		TopicGetCompany  string
+		TopicGetCustomer string
 		TopicUserGetResp string
 		Brokers          string
 		RetryMax         int
