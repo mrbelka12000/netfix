@@ -1,7 +1,7 @@
 {
     "Postgres": {
-        "POSTGRES_DB": "postgres",
-        "POSTGRES_HOST": "postgres",
+        "POSTGRES_DB": "postgres_users",
+        "POSTGRES_HOST": "postgres_users",
         "POSTGRES_PASSWORD": "mrbelka12000",
         "POSTGRES_PORT": "5432",
         "POSTGRES_USER": "postgres"
@@ -10,6 +10,8 @@
         "TopicCompany": "company",
         "TopicCustomer": "customer",
         "TopicAuth": "auth",
+        "TopicGetCompany": "getcompany",
+        "TopicUserGetResp": "getresp",
         "Brokers": "kafka:9092",
         "RetryMax": 5,
         "RequiredAcks": -1,
@@ -17,7 +19,7 @@
         "MaxBytes": 10
     },
     "App": {
-        "SchemaUp": "auth/database/up"
+        "SchemaUp": "users/database/up"
     },
     "Redis": {
         "Host": "redis",

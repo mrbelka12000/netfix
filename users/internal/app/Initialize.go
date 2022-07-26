@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/mrbelka12000/netfix/auth/internal/delivery"
-	"github.com/mrbelka12000/netfix/auth/internal/repository"
-	"github.com/mrbelka12000/netfix/auth/internal/service"
+	"github.com/mrbelka12000/netfix/users/internal/delivery"
+	"github.com/mrbelka12000/netfix/users/internal/repository"
+	"github.com/mrbelka12000/netfix/users/internal/service"
 )
 
 func Initialize() {
@@ -12,6 +12,7 @@ func Initialize() {
 	del := delivery.NewDelivery(srv)
 
 	go del.ConsumerForCustomer()
+	go del.ConsumerForGetCompany()
 	del.ConsumerForCompany()
 	// del.Produce()
 }

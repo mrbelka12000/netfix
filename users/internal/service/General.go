@@ -3,8 +3,8 @@ package service
 import (
 	"log"
 
-	"github.com/mrbelka12000/netfix/auth/internal/repository"
-	"github.com/mrbelka12000/netfix/auth/models"
+	"github.com/mrbelka12000/netfix/users/internal/repository"
+	"github.com/mrbelka12000/netfix/users/models"
 )
 
 type srvGeneral struct {

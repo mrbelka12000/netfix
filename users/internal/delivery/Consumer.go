@@ -4,13 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
-
-	"github.com/mrbelka12000/netfix/auth/config"
-	"github.com/mrbelka12000/netfix/auth/models"
-	"github.com/mrbelka12000/netfix/auth/redis"
-	"github.com/mrbelka12000/netfix/auth/tools"
+	"github.com/mrbelka12000/netfix/users/config"
+	"github.com/mrbelka12000/netfix/users/models"
+	"github.com/mrbelka12000/netfix/users/redis"
+	"github.com/mrbelka12000/netfix/users/tools"
 	"github.com/segmentio/kafka-go"
+	"log"
 )
 
 func (d *Delivery) ConsumerForCompany() {
@@ -120,6 +119,47 @@ func (d *Delivery) ConsumerForCustomer() {
 		if err != nil {
 			log.Println(err.Error())
 			continue
+		}
+	}
+}
+
+func (d *Delivery) ConsumerForGetCompany() {
+	cfg := config.GetConf()
+
+	conf := kafka.ReaderConfig{
+		Brokers:  []string{cfg.Kafka.Brokers},
+		Topic:    cfg.Kafka.TopicGetCompany,
+		MaxBytes: cfg.Kafka.MaxBytes,
+	}
+
+	reader := kafka.NewReader(conf)
+
+	for {
+
+		m, err := reader.ReadMessage(context.Background())
+		if err != nil {
+			log.Println("Error while reading from consumer: ", err)
+			continue
+		}
+
+		gen := &models.General{}
+		err = json.Unmarshal(m.Value, &gen)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		uuid := gen.UUID
+		gen, err = d.srv.GetByID(gen.ID)
+		if err != nil {
+			log.Println("get company by id error: " + err.Error())
+			continue
+		}
+		gen.UUID = uuid
+
+		err = publish(tools.MakeJsonString(gen), cfg.Kafka.TopicUserGetResp)
+		if err != nil {
+			log.Println(err.Error())
 		}
 	}
 }

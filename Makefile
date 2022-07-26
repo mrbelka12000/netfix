@@ -6,4 +6,4 @@ start_in_normal:
 
 cleanVolumes:
 	@docker-compose down
-	@docker volume rm netfix_auth netfix_basic netfix_postgres
+	@docker volume rm netfix_users netfix_basic netfix_postgresUsers netfix_postgresBasic netfix_postgresBilling

@@ -2,7 +2,7 @@ package delivery
 
 import (
 	"fmt"
-	"github.com/mrbelka12000/netfix/auth/config"
+	"github.com/mrbelka12000/netfix/users/config"
 	"log"
 
 	"github.com/Shopify/sarama"

@@ -23,12 +23,14 @@ type config struct {
 	}
 	Redis struct {
 		Host string
-		Prot string
+		Port string
 	}
 	Kafka struct {
 		TopicCompany      string
 		TopicCustomer     string
 		TopicAuth         string
+		TopicGetCompany   string
+		TopicUserGetResp  string
 		TopicBilling      string
 		TopicWallets      string
 		TopicCreateWallet string

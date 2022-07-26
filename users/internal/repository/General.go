@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/mrbelka12000/netfix/auth/models"
+	"github.com/mrbelka12000/netfix/users/models"
 	"log"
 )
 

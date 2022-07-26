@@ -17,6 +17,7 @@ func SetUpMux(h *handler.Handler) *mux.Router {
 	r.HandleFunc("/", h.Main).Methods(http.MethodGet)
 	r.HandleFunc("/register/company", h.RegisterCompany).Methods(http.MethodPost)
 	r.HandleFunc("/register/customer", h.RegisterCustomer).Methods(http.MethodPost)
+	r.HandleFunc("/profile", h.Profile).Methods(http.MethodGet)
 
 	r.HandleFunc("/service", h.CreateService).Methods(http.MethodPost)
 	r.HandleFunc("/service/apply", h.ApplyForWork).Methods(http.MethodPost)

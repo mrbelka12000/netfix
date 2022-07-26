@@ -14,6 +14,6 @@ RUN go mod  download
 
 COPY . .
 
-RUN go build -o Auth auth/cmd/main.go
+RUN go build -o Users users/cmd/main.go
 
-CMD ["./Auth"]
+CMD ["./Users"]

@@ -7,7 +7,7 @@ import (
 	"sync"
 
 	_ "github.com/lib/pq"
-	"github.com/mrbelka12000/netfix/auth/config"
+	"github.com/mrbelka12000/netfix/users/config"
 )
 
 var (

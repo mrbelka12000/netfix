@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-redis/redis"
-	"github.com/mrbelka12000/netfix/auth/config"
-	"github.com/mrbelka12000/netfix/basic/models"
 	"log"
+
+	"github.com/go-redis/redis"
+	"github.com/mrbelka12000/netfix/basic/config"
+	"github.com/mrbelka12000/netfix/basic/models"
 )
 
 func SetValue(key, value string) error {

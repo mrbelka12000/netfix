@@ -1,6 +1,6 @@
 package delivery
 
-import "github.com/mrbelka12000/netfix/auth/internal/service"
+import "github.com/mrbelka12000/netfix/users/internal/service"
 
 type Delivery struct {
 	srv *service.Service

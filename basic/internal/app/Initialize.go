@@ -16,7 +16,6 @@ func Initialize() {
 	h := handler.NewHandler(srv)
 	router := routes.SetUpMux(h)
 	s := server.NewServer(router)
-	//database.Up()
 
 	err := s.ListenAndServe()
 	if err != nil {

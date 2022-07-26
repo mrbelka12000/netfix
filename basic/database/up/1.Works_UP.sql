@@ -5,6 +5,5 @@ CREATE TABLE IF NOT EXISTS works (
     Description text not null,
     Price float8 not null,
     Date DATE not null,
-    CompanyID integer not null,
-    FOREIGN KEY (CompanyID) REFERENCES company(id)
+    CompanyID integer not null
 )

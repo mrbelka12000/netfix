@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
-	"github.com/mrbelka12000/netfix/auth/config"
+	"github.com/mrbelka12000/netfix/users/config"
 	"log"
 	"time"
 )

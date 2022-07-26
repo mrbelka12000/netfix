@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/mrbelka12000/netfix/auth/config"
-	"github.com/mrbelka12000/netfix/auth/internal/repository"
+	"github.com/mrbelka12000/netfix/users/config"
+	"github.com/mrbelka12000/netfix/users/internal/repository"
 )
 
 func Up() {

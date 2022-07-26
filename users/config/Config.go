@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-const cfgPath = "auth/config/config.json"
+const cfgPath = "users/config/config.json"
 
 type config struct {
 	Postgres struct {
@@ -16,14 +16,16 @@ type config struct {
 		POSTGRES_USER     string
 	}
 	Kafka struct {
-		TopicCompany  string
-		TopicCustomer string
-		TopicAuth     string
-		Brokers       string
-		RetryMax      int
-		RequiredAcks  int
-		MaxBytes      int
-		Successes     bool
+		TopicCompany     string
+		TopicCustomer    string
+		TopicAuth        string
+		TopicGetCompany  string
+		TopicUserGetResp string
+		Brokers          string
+		RetryMax         int
+		RequiredAcks     int
+		MaxBytes         int
+		Successes        bool
 	}
 	App struct {
 		SchemaUp string

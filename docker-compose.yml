@@ -29,32 +29,60 @@ services:
       - "6379:6379"
     networks:
       - netfix
-  postgres:
+  postgres_users:
     image: postgres:latest
-    container_name: postgres
+    container_name: postgres_users
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mrbelka12000
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=postgres_users
       - DATABASE_HOST="localhost"
     ports:
       - '5432:5432'
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgresUsers:/var/lib/postgresql/data
     networks:
       - netfix
-  auth:
-      container_name: auth
+  postgres_basic:
+    image: postgres:latest
+    container_name: postgres_basic
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mrbelka12000
+      - POSTGRES_DB=postgres_basic
+      - DATABASE_HOST="localhost"
+    ports:
+      - '5433:5432'
+    volumes:
+      - postgresBasic:/var/lib/postgresql/data
+    networks:
+      - netfix
+  postgres_billing:
+    image: postgres:latest
+    container_name: postgres_billing
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mrbelka12000
+      - POSTGRES_DB=postgres_billing
+      - DATABASE_HOST="localhost"
+    ports:
+      - '5434:5432'
+    volumes:
+      - postgresBilling:/var/lib/postgresql/data
+    networks:
+      - netfix
+  users:
+      container_name: users
       build:
-        dockerfile: auth/Dockerfile
+        dockerfile: users/Dockerfile
         context: .
       ports:
         - "8080:8080"
       restart: on-failure
       volumes:
-        - auth:/usr/src/app/
+        - users:/usr/src/app/
       depends_on:
-        - postgres
+        - postgres_users
         - kafka
         - redis
       networks:
@@ -71,10 +99,8 @@ services:
       - basic:/usr/src/app/
     depends_on:
       - kafka
-      - postgres
+      - postgres_basic
       - redis
-      - billing
-      - auth
     networks:
       - netfix
   billing:
@@ -89,16 +115,18 @@ services:
       - billing:/usr/src/app/
     depends_on:
       - kafka
-      - postgres
+      - postgres_billing
       - redis
     networks:
       - netfix
 
 volumes:
-  auth:
+  users:
   basic:
-  postgres:
   billing:
+  postgresUsers:
+  postgresBasic:
+  postgresBilling:
 
 networks:
   netfix:

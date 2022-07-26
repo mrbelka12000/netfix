@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/mrbelka12000/netfix/auth/models"
+	"github.com/mrbelka12000/netfix/users/models"
 )
 
 type repoCustomer struct{}

@@ -1,9 +1,10 @@
 package repository
 
-import "github.com/mrbelka12000/netfix/auth/models"
+import "github.com/mrbelka12000/netfix/users/models"
 
 type Company interface {
 	RegisterCompany(company *models.Company) error
+	GetByID(id int) (*models.General, error)
 }
 
 type Customer interface {

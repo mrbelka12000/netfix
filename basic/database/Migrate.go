@@ -2,12 +2,10 @@ package database
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
-	"os"
-
 	"github.com/mrbelka12000/netfix/basic/config"
 	"github.com/mrbelka12000/netfix/basic/internal/repository"
+	"io/ioutil"
+	"log"
 )
 
 func Up() {
@@ -27,7 +25,7 @@ func Up() {
 
 		if _, err = conn.Exec(string(body)); err != nil {
 			log.Println(fmt.Sprintf("Миграция %v не может отработать по причине %v", file.Name(), err.Error()))
-			os.Exit(1)
+			continue
 		}
 		log.Println(fmt.Sprintf("Миграция %v отработала успешно ", file.Name()))
 	}
