@@ -44,6 +44,7 @@ func Consumer(topic, uuid string) (*models.General, error) {
 				log.Println("uuid does not match")
 				continue
 			}
+			gen.UUID = ""
 			return gen, nil
 		}
 		fmt.Println("No message from kafka")

@@ -72,12 +72,12 @@ func (rw *repoWorks) GetByID(id int) (*models.Work, error) {
 	w := &models.Work{}
 	err := conn.QueryRow(`
 	SELECT
-	    works.name, works.workfield, works.description, works.price, works.date, general.username
+	    name, workfield, description, price, date,CompanyID 
 	FROM 
-	    works join general on works.companyid=general.id
+	    works
 	WHERE
-	    works.Id =$1
-`, id).Scan(&w.Name, &w.WorkField, &w.Description, &w.Price, &w.Date, &w.CompanyName)
+	    Id =$1
+`, id).Scan(&w.Name, &w.WorkField, &w.Description, &w.Price, &w.Date, &w.CompanyID)
 	if err != nil {
 		log.Println("get work error: " + err.Error())
 		return nil, err

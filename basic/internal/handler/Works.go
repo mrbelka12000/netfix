@@ -2,6 +2,8 @@ package handler
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/mrbelka12000/netfix/basic/config"
+	"github.com/mrbelka12000/netfix/basic/internal/delivery"
 	"github.com/mrbelka12000/netfix/basic/models"
 	"log"
 	"net/http"
@@ -42,6 +44,8 @@ func (h *Handler) GetWorkFields(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) GetWork(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
+	cfg := config.GetConf()
+
 	vars := mux.Vars(r)
 	id, ok := vars["id"]
 	if !ok {
@@ -64,6 +68,25 @@ func (h *Handler) GetWork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	g := &models.General{
+		ID:   work.CompanyID,
+		UUID: tools.GetRandomString(),
+	}
+	err = delivery.Publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetCompany)
+	if err != nil {
+		log.Println("publish error: " + err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	g, err = delivery.Consumer(cfg.Kafka.TopicUserGetResp, g.UUID)
+	if err != nil {
+		log.Println("consumer error: " + err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	work.CompanyName = g.Username
 	w.Write([]byte(tools.MakeJsonString(work)))
 }
 
