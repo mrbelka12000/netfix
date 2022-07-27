@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/mrbelka12000/netfix/users/config"
+	"github.com/mrbelka12000/netfix/users/internal/repository"
 	"github.com/mrbelka12000/netfix/users/models"
 	"github.com/mrbelka12000/netfix/users/redis"
 	"github.com/mrbelka12000/netfix/users/tools"
@@ -38,18 +39,28 @@ func (d *Delivery) ConsumerForCompany() {
 			continue
 		}
 
-		id, err := d.srv.Register(gen)
+		conn := repository.GetConnection()
+		tx, err := conn.Begin()
 		if err != nil {
+			log.Println("tx creation error: " + err.Error())
+			continue
+		}
+
+		id, err := d.srv.Register(gen, tx)
+		if err != nil {
+			tx.Commit()
 			log.Println("registration error: " + err.Error())
 			continue
 		}
 
-		err = d.srv.RegisterCompany(&models.Company{ID: id, WorkField: gen.WorkField})
+		err = d.srv.RegisterCompany(&models.Company{ID: id, WorkField: gen.WorkField}, tx)
 		if err != nil {
+			tx.Commit()
 			log.Println("registration error: " + err.Error())
 			continue
 		}
 
+		tx.Commit()
 		log.Println("successfully created")
 
 		role := models.Role{ID: id, UserType: models.Cmp}
@@ -93,18 +104,28 @@ func (d *Delivery) ConsumerForCustomer() {
 			continue
 		}
 
-		id, err := d.srv.Register(gen)
+		conn := repository.GetConnection()
+		tx, err := conn.Begin()
 		if err != nil {
+			log.Println("tx creation error: " + err.Error())
+			continue
+		}
+
+		id, err := d.srv.Register(gen, tx)
+		if err != nil {
+			tx.Commit()
 			log.Println("registration error: " + err.Error())
 			continue
 		}
 
-		err = d.srv.RegisterCustomer(&models.Customer{ID: id, Birth: gen.Birth})
+		err = d.srv.RegisterCustomer(&models.Customer{ID: id, Birth: gen.Birth}, tx)
 		if err != nil {
+			tx.Commit()
 			log.Println("registration error: " + err.Error())
 			continue
 		}
 
+		tx.Commit()
 		log.Println("successfully created")
 
 		role := models.Role{ID: id, UserType: models.Cust}

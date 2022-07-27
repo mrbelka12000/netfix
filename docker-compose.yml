@@ -17,7 +17,7 @@ services:
       KAFKA_CREATE_TOPICS: "Generated:1:1,Solved:1:1,Unsolved:1:1"
       KAFKA_DELETE_TOPIC_ENABLE: "true"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka:/var/run/docker.sock
     depends_on:
       - zookeeper
     networks:
@@ -29,6 +29,8 @@ services:
       - "6379:6379"
     networks:
       - netfix
+    volumes:
+      - redis_data:/data
   postgres_users:
     image: postgres:latest
     container_name: postgres_users
@@ -124,6 +126,8 @@ volumes:
   users:
   basic:
   billing:
+  kafka:
+  redis_data:
   postgresUsers:
   postgresBasic:
   postgresBilling:

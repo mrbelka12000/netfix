@@ -165,8 +165,11 @@ func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 // @Failure 400,404,405,500
 // @Router /service/finish [post]
 func (h *Handler) FinishWork(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 
 	c := r.Header.Get("session")
+
+	cfg := config.GetConf()
 
 	ut, err := redis.GetUserType(c)
 	if err != nil {
@@ -210,6 +213,20 @@ func (h *Handler) FinishWork(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	work, err := h.srv.GetByID(wa.WorkID)
+	if err != nil {
+		log.Println("get work error: " + err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+
+	wa.Price = work.Price
+	wa.CompanyID = work.CompanyID
+
+	err = delivery.Publish(tools.MakeJsonString(wa), cfg.Kafka.TopicBilling)
+	if err != nil {
+		log.Println(err.Error())
+	}
 	w.Write([]byte("finished"))
 }
 

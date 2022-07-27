@@ -53,7 +53,7 @@ func (d *Delivery) ConsumerForWallets() {
 	}
 }
 
-func (d *Delivery) ConsumerForBilling() {
+func (d *Delivery) ConsumerForBilling(bil chan<- []byte) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -71,7 +71,21 @@ func (d *Delivery) ConsumerForBilling() {
 			log.Println("Error while reading from consumer: ", err)
 			continue
 		}
-		log.Println(string(m.Value))
+		ap := &models.Apply{}
+
+		//minimal json validation
+		err = json.Unmarshal(m.Value, &ap)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		err = ap.Validate()
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+		bil <- m.Value
 	}
 }
 

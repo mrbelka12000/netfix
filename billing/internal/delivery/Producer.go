@@ -46,7 +46,7 @@ func publish(message string, topic string) error {
 
 	// publish async
 	// producer.Input() <- &sarama.ProducerMessage{
-
+	fmt.Println("Message: ", message)
 	fmt.Println("Partition: ", p)
 	fmt.Println("Offset: ", o)
 	return nil

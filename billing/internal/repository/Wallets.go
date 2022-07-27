@@ -12,7 +12,7 @@ func newWallet() *repoWallet {
 	return &repoWallet{}
 }
 
-const unlimAmount = 1423821348218124
+const unlimAmount = 10000
 
 func (rw *repoWallet) Create(wallet *models.Wallet) error {
 

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"errors"
 	"log"
 	"time"
@@ -16,22 +17,23 @@ func newCustomer() *repoCustomer {
 
 const layout = "2006-01-02"
 
-func (rc *repoCustomer) RegisterCustomer(customer *models.Customer) error {
-	conn := GetConnection()
+func (rc *repoCustomer) RegisterCustomer(customer *models.Customer, tx *sql.Tx) error {
 
 	date, err := time.Parse(layout, customer.Birth)
 	if err != nil {
 		log.Println("invalid birth date: " + err.Error())
+		tx.Rollback()
 		return errors.New("invalid birth date")
 	}
 
-	_, err = conn.Exec(`
+	_, err = tx.Exec(`
 	INSERT INTO customer
 		(id, birth)
 	VALUES 
 		($1,$2)
 `, customer.ID, date)
 	if err != nil {
+		tx.Rollback()
 		log.Println("customer register error: " + err.Error())
 		return err
 	}

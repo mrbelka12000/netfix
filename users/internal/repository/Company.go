@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/mrbelka12000/netfix/users/models"
@@ -12,16 +13,16 @@ func newCompany() *repoCompany {
 	return &repoCompany{}
 }
 
-func (rc *repoCompany) RegisterCompany(company *models.Company) error {
-	conn := GetConnection()
+func (rc *repoCompany) RegisterCompany(company *models.Company, tx *sql.Tx) error {
 
-	_, err := conn.Exec(`
+	_, err := tx.Exec(`
 	INSERT INTO company
 		(id, workfield)
 	VALUES 
 		($1,$2)
 	`, company.ID, company.WorkField)
 	if err != nil {
+		tx.Rollback()
 		log.Println("company register error: " + err.Error())
 		return err
 	}

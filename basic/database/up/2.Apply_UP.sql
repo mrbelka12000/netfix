@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS Apply(
     CustomerID integer not null,
     WorkID integer not null,
     StartDate integer not null,
-    EndDate integer
+    EndDate integer,
+    FOREIGN KEY (WorkID) REFERENCES works(id)
 )

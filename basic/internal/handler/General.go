@@ -34,10 +34,12 @@ func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
+
 	g := &models.General{
 		ID:   ut.ID,
 		UUID: tools.GetRandomString(),
 	}
+
 	switch ut.UserType {
 	case models.Cmp:
 		err = delivery.Publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetCompany)
@@ -66,6 +68,9 @@ func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
+	g.UUID = tools.GetRandomString()
+
 	err = delivery.Publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetWallet)
 	if err != nil {
 		log.Println("publish error: " + err.Error())

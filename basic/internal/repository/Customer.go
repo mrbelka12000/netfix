@@ -14,6 +14,8 @@ func newCustomer() *repoCustomer {
 	return &repoCustomer{}
 }
 
+const active = false
+
 func (rc *repoCustomer) ApplyForWork(work *models.WorkActions) error {
 	conn := GetConnection()
 
@@ -55,30 +57,50 @@ func (rc *repoCustomer) ApplyForWork(work *models.WorkActions) error {
 
 func (rc *repoCustomer) FinishWork(work *models.WorkActions) error {
 	conn := GetConnection()
+	now := tools.GetUnixDate()
 
-	res, err := conn.Exec(`
+	tx, err := conn.Begin()
+	if err != nil {
+		log.Println("tx creation error: " + err.Error())
+		return err
+	}
+	defer tx.Commit()
+
+	err = tx.QueryRow(`
 		UPDATE
 			apply
 		SET 
 		    enddate=$1
 		WHERE
 		    workId = $2 and customerId= $3
-`, tools.GetUnixDate(), work.WorkID, work.CustomerID)
+		RETURNING 
+			ID, startdate
+`, now, work.WorkID, work.CustomerID).Scan(&work.ID, &work.StartDate)
 	if err != nil {
-		log.Println("finish work error: " + err.Error())
+		tx.Rollback()
+		log.Println("repo finish work error: " + err.Error())
 		return err
 	}
 
-	rows, err := res.RowsAffected()
+	if work.ID == 0 {
+		tx.Rollback()
+		return errors.New("no items to update")
+	}
+
+	_, err = tx.Exec(`
+		UPDATE 
+			workstatus
+		SET
+		    status=$1
+		WHERE 
+		    workid=$2
+`, active, work.WorkID)
 	if err != nil {
-		log.Println("rows affected error: " + err.Error())
+		log.Println("update work status error: " + err.Error())
+		tx.Rollback()
 		return err
 	}
 
-	if rows == 0 {
-		log.Println("no works to finish")
-		return errors.New("no works to finish")
-	}
-
+	work.EndDate = now
 	return nil
 }
