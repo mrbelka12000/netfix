@@ -12,8 +12,6 @@ import (
 	"time"
 )
 
-var counter = 0
-
 func Consumer(topic, uuid string) (*models.General, error) {
 	cfg := config.GetConf()
 
@@ -28,11 +26,6 @@ func Consumer(topic, uuid string) (*models.General, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	for {
-		offset := 0
-		if offset < counter {
-			offset++
-			continue
-		}
 		m, err := reader.ReadMessage(ctx)
 		if err != nil {
 			fmt.Println("Error while reading from consumer: ", err)
@@ -52,7 +45,6 @@ func Consumer(topic, uuid string) (*models.General, error) {
 				continue
 			}
 			gen.UUID = ""
-			counter++
 			return gen, nil
 		}
 		fmt.Println("No message from kafka")

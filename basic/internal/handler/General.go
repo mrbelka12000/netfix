@@ -88,6 +88,12 @@ func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(tools.MakeJsonString(g)))
 }
 
+/*
+
+SWAGGER MODELS
+
+*/
+
 type getGeneral struct {
 	*models.SwaggerGetGeneral
 }

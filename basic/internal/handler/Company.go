@@ -83,10 +83,10 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 // @Tags service
 // @Accept  json
 // @Produce  json
-// @Param input body workCreate true "service"
+// @Param input body workCreateReq true "service"
 // @Param session header string true "session"
 // @Security ApiKeyAuth
-// @Success 201 {string} string	"OKEY"
+// @Success 201 {object} workCreateResp
 // @Failure 400,404,405,500
 // @Router /service [post]
 func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
@@ -138,16 +138,27 @@ func (h *Handler) CreateService(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte("OKEY"))
+	w.Write([]byte(tools.MakeJsonString(cw)))
 }
+
+/*
+
+SWAGGER MODELS
+
+*/
 
 type companyReg struct {
 	*models.SwaggerCompanyRegister
 }
 
-type workCreate struct {
+type workCreateReq struct {
 	*models.SwaggerWorkCreate
 }
+
 type session struct {
 	*models.Session
+}
+
+type workCreateResp struct {
+	*models.SwaggerWork
 }

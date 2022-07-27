@@ -44,7 +44,7 @@ func Publish(message, topic string) error {
 		return err
 	}
 
-	fmt.Println("Message: ", message)
+	fmt.Print("Message: ", message)
 	fmt.Println("Partition: ", p)
 	fmt.Println("Offset: ", o)
 	return nil

@@ -19,7 +19,7 @@
     "TopicGetCustomer": "getcustomer",
     "TopicGetWallet": "getwallet",
     "TopicGetWalletResp": "getwalletResp",
-    "TopicUserGetResp": "getresp",
+    "TopicUserGetResp": "usergetresp",
     "TopicBilling": "billing",
     "TopicWallets": "wallets",
     "TopicCreateWallet": "createwallet",

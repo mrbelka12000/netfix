@@ -230,6 +230,12 @@ func (h *Handler) FinishWork(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("finished"))
 }
 
+/*
+
+SWAGGER MODELS
+
+*/
+
 type customerReg struct {
 	*models.SwaggerCustomerRegister
 }

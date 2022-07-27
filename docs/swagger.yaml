@@ -70,8 +70,27 @@ definitions:
       workID:
         type: integer
     type: object
-  handler.workCreate:
+  handler.workCreateReq:
     properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      workField:
+        type: string
+    type: object
+  handler.workCreateResp:
+    properties:
+      ID:
+        type: integer
+      companyID:
+        type: integer
+      companyName:
+        type: string
+      date:
+        type: string
       description:
         type: string
       name:
@@ -203,7 +222,7 @@ paths:
         name: input
         required: true
         schema:
-          $ref: '#/definitions/handler.workCreate'
+          $ref: '#/definitions/handler.workCreateReq'
       - description: session
         in: header
         name: session
@@ -213,9 +232,9 @@ paths:
       - application/json
       responses:
         "201":
-          description: OKEY
+          description: Created
           schema:
-            type: string
+            $ref: '#/definitions/handler.workCreateResp'
         "400":
           description: Bad Request
         "404":

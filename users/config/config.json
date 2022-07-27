@@ -12,7 +12,7 @@
         "TopicAuth": "auth",
         "TopicGetCompany": "getcompany",
         "TopicGetCustomer": "getcustomer",
-        "TopicUserGetResp": "getresp",
+        "TopicUserGetResp": "usergetresp",
         "Brokers": "kafka:9092",
         "RetryMax": 5,
         "RequiredAcks": -1,

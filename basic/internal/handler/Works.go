@@ -90,10 +90,16 @@ func (h *Handler) GetWork(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(tools.MakeJsonString(work)))
 }
 
+/*
+
+SWAGGER MODELS
+
+*/
+
 type workFields struct {
 	*models.SwaggerWorkFields
 }
 
 type work struct {
-	*models.Work
+	*models.SwaggerWork
 }

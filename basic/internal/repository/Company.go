@@ -26,6 +26,7 @@ func (rc *repoCompany) CreateWork(work *models.Work) error {
 	}
 	defer tx.Commit()
 	now := time.Now().In(loc)
+
 	err = tx.QueryRow(`
 		INSERT INTO works
 			(name, workfield, description, price, date, companyID)

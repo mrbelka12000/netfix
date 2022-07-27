@@ -38,3 +38,14 @@ type SwaggerGetGeneral struct {
 	Birth     *string `json:"birth,omitempty"`
 	Amount    float64 `json:"amount"`
 }
+
+type SwaggerWork struct {
+	ID          int     `json:"ID"`
+	CompanyID   int     `json:"companyID"`
+	Name        string  `json:"name"`
+	WorkField   string  `json:"workField"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	Date        string  `json:"date"`
+	CompanyName string  `json:"companyName"`
+}

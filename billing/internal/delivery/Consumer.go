@@ -49,7 +49,7 @@ func (d *Delivery) ConsumerForWallets() {
 			log.Println("publish error: " + err.Error())
 			continue
 		}
-		log.Println("work successfully created")
+		log.Println("wallet successfully created")
 	}
 }
 

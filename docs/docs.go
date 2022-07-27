@@ -188,7 +188,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/handler.workCreate"
+                            "$ref": "#/definitions/handler.workCreateReq"
                         }
                     },
                     {
@@ -201,9 +201,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "OKEY",
+                        "description": "Created",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/handler.workCreateResp"
                         }
                     },
                     "400": {
@@ -517,9 +517,38 @@ const docTemplate = `{
                 }
             }
         },
-        "handler.workCreate": {
+        "handler.workCreateReq": {
             "type": "object",
             "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "workField": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.workCreateResp": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "companyID": {
+                    "type": "integer"
+                },
+                "companyName": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
                 "description": {
                     "type": "string"
                 },
