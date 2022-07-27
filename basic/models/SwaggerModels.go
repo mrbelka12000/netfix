@@ -28,3 +28,13 @@ type SwaggerWorkAction struct {
 type SwaggerWorkFields struct {
 	WorkFileds []string `json:"workFields"`
 }
+
+type SwaggerGetGeneral struct {
+	ID        int     `json:"ID"`
+	Username  string  `json:"username"`
+	Password  string  `json:"password"`
+	Email     string  `json:"email"`
+	WorkField *string `json:"workField,omitempty"`
+	Birth     *string `json:"birth,omitempty"`
+	Amount    float64 `json:"amount"`
+}

@@ -25,14 +25,16 @@ type config struct {
 		Prot string
 	}
 	Kafka struct {
-		TopicBilling      string
-		TopicCreateWallet string
-		TopicWallets      string
-		Brokers           string
-		RetryMax          int
-		RequiredAcks      int
-		MaxBytes          int
-		Successes         bool
+		TopicBilling       string
+		TopicCreateWallet  string
+		TopicWallets       string
+		TopicGetWallet     string
+		TopicGetWalletResp string
+		Brokers            string
+		RetryMax           int
+		RequiredAcks       int
+		MaxBytes           int
+		Successes          bool
 	}
 }
 

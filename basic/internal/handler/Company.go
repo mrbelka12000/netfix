@@ -84,6 +84,8 @@ func (h *Handler) RegisterCompany(w http.ResponseWriter, r *http.Request) {
 // @Accept  json
 // @Produce  json
 // @Param input body workCreate true "service"
+// @Param session header string true "session"
+// @Security ApiKeyAuth
 // @Success 201 {string} string	"OKEY"
 // @Failure 400,404,405,500
 // @Router /service [post]

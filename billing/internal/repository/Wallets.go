@@ -34,3 +34,22 @@ func (rw *repoWallet) Create(wallet *models.Wallet) error {
 	log.Println("wallet successfully created")
 	return nil
 }
+
+func (rw *repoWallet) GetWalletAmount(ownerId int) (float64, error) {
+	conn := GetConnection()
+	var amount float64
+	err := conn.QueryRow(`
+		SELECT 
+		    amount
+		FROM
+		    wallets
+		WHERE 
+		    OwnerID=$1
+`, ownerId).Scan(&amount)
+	if err != nil {
+		log.Println("get wallet error: " + err.Error())
+		return 0, err
+	}
+
+	return amount, nil
+}

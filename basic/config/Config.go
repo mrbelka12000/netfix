@@ -26,20 +26,22 @@ type config struct {
 		Port string
 	}
 	Kafka struct {
-		TopicCompany      string
-		TopicCustomer     string
-		TopicAuth         string
-		TopicGetCompany   string
-		TopicGetCustomer  string
-		TopicUserGetResp  string
-		TopicBilling      string
-		TopicWallets      string
-		TopicCreateWallet string
-		Brokers           string
-		RetryMax          int
-		RequiredAcks      int
-		MaxBytes          int
-		Successes         bool
+		TopicCompany       string
+		TopicCustomer      string
+		TopicAuth          string
+		TopicGetCompany    string
+		TopicGetCustomer   string
+		TopicUserGetResp   string
+		TopicGetWallet     string
+		TopicGetWalletResp string
+		TopicBilling       string
+		TopicWallets       string
+		TopicCreateWallet  string
+		Brokers            string
+		RetryMax           int
+		RequiredAcks       int
+		MaxBytes           int
+		Successes          bool
 	}
 }
 

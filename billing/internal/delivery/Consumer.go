@@ -3,7 +3,6 @@ package delivery
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/mrbelka12000/netfix/billing/config"
 	"github.com/mrbelka12000/netfix/billing/models"
 	"github.com/mrbelka12000/netfix/billing/tools"
@@ -36,7 +35,7 @@ func (d *Delivery) ConsumerForWallets() {
 			log.Println(err.Error())
 			continue
 		}
-		fmt.Printf("%+v\n", w)
+
 		err = d.srv.Create(w)
 		if err != nil {
 			log.Println(err.Error())
@@ -45,7 +44,12 @@ func (d *Delivery) ConsumerForWallets() {
 
 		gen := &models.General{UUID: w.UUID, ID: w.OwnerID}
 
-		publish(tools.MakeJsonString(gen), cfg.Kafka.TopicCreateWallet)
+		err = publish(tools.MakeJsonString(gen), cfg.Kafka.TopicCreateWallet)
+		if err != nil {
+			log.Println("publish error: " + err.Error())
+			continue
+		}
+		log.Println("work successfully created")
 	}
 }
 
@@ -64,9 +68,51 @@ func (d *Delivery) ConsumerForBilling() {
 
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
-			fmt.Println("Error while reading from consumer: ", err)
+			log.Println("Error while reading from consumer: ", err)
 			continue
 		}
-		fmt.Println(string(m.Value))
+		log.Println(string(m.Value))
+	}
+}
+
+func (d *Delivery) ConsumerForGetWallet() {
+	cfg := config.GetConf()
+
+	conf := kafka.ReaderConfig{
+		Brokers:  []string{cfg.Kafka.Brokers},
+		Topic:    cfg.Kafka.TopicGetWallet,
+		MaxBytes: cfg.Kafka.MaxBytes,
+	}
+
+	reader := kafka.NewReader(conf)
+
+	for {
+
+		m, err := reader.ReadMessage(context.Background())
+		if err != nil {
+			log.Println("Error while reading from consumer: ", err)
+			continue
+		}
+		g := &models.General{}
+
+		err = json.Unmarshal(m.Value, &g)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		amount, err := d.srv.GetWalletAmount(g.ID)
+		if err != nil {
+			log.Println("get wallet by ownerID error: " + err.Error())
+			continue
+		}
+		g.Amount = amount
+
+		err = publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetWalletResp)
+		if err != nil {
+			log.Println("publish error: " + err.Error())
+			continue
+		}
+		log.Println("response successfully created")
 	}
 }

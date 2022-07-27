@@ -11,5 +11,6 @@ func Initialize() {
 	srv := service.NewService(repo)
 	d := delivery.NewDelivery(srv)
 
+	go d.ConsumerForGetWallet()
 	d.ConsumerForWallets()
 }

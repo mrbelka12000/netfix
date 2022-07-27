@@ -18,6 +18,56 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/profile": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "getting profile by cookie",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "general"
+                ],
+                "summary": "get profile",
+                "operationId": "profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "session",
+                        "name": "session",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "general",
+                        "schema": {
+                            "$ref": "#/definitions/handler.getGeneral"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "405": {
+                        "description": "Method Not Allowed"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/register/company": {
             "post": {
                 "description": "registration",
@@ -114,6 +164,11 @@ const docTemplate = `{
         },
         "/service": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "description": "choose one of work field: Air Conditioner,Carpentry,Electricity,Gardening,Home Machines,Housekeeping,Interior Design,Locks,Painting,Plumbing,Water Heaters",
                 "consumes": [
                     "application/json"
@@ -135,6 +190,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/handler.workCreate"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "session",
+                        "name": "session",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -161,6 +223,11 @@ const docTemplate = `{
         },
         "/service/apply": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -181,6 +248,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/handler.workAction"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "session",
+                        "name": "session",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -207,6 +281,11 @@ const docTemplate = `{
         },
         "/service/finish": {
             "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
                 "consumes": [
                     "application/json"
                 ],
@@ -227,6 +306,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/handler.workAction"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "session",
+                        "name": "session",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -353,6 +439,32 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "handler.getGeneral": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "birth": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "workField": {
                     "type": "string"
                 }
             }

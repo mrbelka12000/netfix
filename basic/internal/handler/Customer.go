@@ -86,6 +86,8 @@ func (h *Handler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 // @Accept  json
 // @Produce  json
 // @Param input body workAction true "work"
+// @Param session header string true "session"
+// @Security ApiKeyAuth
 // @Success 200 {string} string	"OKEY"
 // @Failure 400,404,405,500
 // @Router /service/apply [post]
@@ -157,6 +159,8 @@ func (h *Handler) ApplyForWork(w http.ResponseWriter, r *http.Request) {
 // @Accept  json
 // @Produce  json
 // @Param input body workAction true "finished"
+// @Param session header string true "session"
+// @Security ApiKeyAuth
 // @Success 200 {string} string	"OKEY"
 // @Failure 400,404,405,500
 // @Router /service/finish [post]

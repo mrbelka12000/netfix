@@ -5,6 +5,7 @@ import "github.com/mrbelka12000/netfix/billing/models"
 
 type Wallet interface {
 	Create(wallet *models.Wallet) error
+	GetWalletAmount(ownerID int) (float64, error)
 }
 
 type Billing interface {

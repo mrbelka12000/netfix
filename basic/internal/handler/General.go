@@ -10,6 +10,18 @@ import (
 	"net/http"
 )
 
+// Profile get  example
+// @Summary get profile
+// @Description getting profile by cookie
+// @ID profile
+// @Tags general
+// @Accept  json
+// @Produce  json
+// @Param session header string true "session"
+// @Security ApiKeyAuth
+// @Success 200 {object} getGeneral "general"
+// @Failure 400,404,405,500
+// @Router /profile [get]
 func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -22,12 +34,12 @@ func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 400)
 		return
 	}
+	g := &models.General{
+		ID:   ut.ID,
+		UUID: tools.GetRandomString(),
+	}
 	switch ut.UserType {
 	case models.Cmp:
-		g := &models.General{
-			ID:   ut.ID,
-			UUID: tools.GetRandomString(),
-		}
 		err = delivery.Publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetCompany)
 		if err != nil {
 			log.Println("pushlish error: " + err.Error())
@@ -40,13 +52,7 @@ func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "service unavailable", 500)
 			return
 		}
-		w.Write([]byte(tools.MakeJsonString(g)))
-		return
 	case models.Cust:
-		g := &models.General{
-			ID:   ut.ID,
-			UUID: tools.GetRandomString(),
-		}
 		err = delivery.Publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetCustomer)
 		if err != nil {
 			log.Println("pushlish error: " + err.Error())
@@ -59,8 +65,24 @@ func (h *Handler) Profile(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "service unavailable", 500)
 			return
 		}
-		w.Write([]byte(tools.MakeJsonString(g)))
+	}
+	err = delivery.Publish(tools.MakeJsonString(g), cfg.Kafka.TopicGetWallet)
+	if err != nil {
+		log.Println("publish error: " + err.Error())
+		http.Error(w, err.Error(), 500)
 		return
 	}
 
+	g, err = delivery.Consumer(cfg.Kafka.TopicGetWalletResp, g.UUID)
+	if err != nil {
+		log.Println("consumer error: " + err.Error())
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	g.UUID = ""
+	w.Write([]byte(tools.MakeJsonString(g)))
+}
+
+type getGeneral struct {
+	*models.SwaggerGetGeneral
 }

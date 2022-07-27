@@ -9,6 +9,7 @@ type General struct {
 	Email     string  `json:"email"`
 	WorkField *string `json:"workField,omitempty"`
 	Birth     *string `json:"birth,omitempty"`
+	Amount    float64 `json:"amount"`
 	UUID      string  `json:"uuid"`
 }
 

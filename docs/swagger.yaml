@@ -22,6 +22,23 @@ definitions:
       username:
         type: string
     type: object
+  handler.getGeneral:
+    properties:
+      ID:
+        type: integer
+      amount:
+        type: number
+      birth:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+      workField:
+        type: string
+    type: object
   handler.session:
     properties:
       cookie:
@@ -79,6 +96,38 @@ info:
   title: net-fix
   version: "1.0"
 paths:
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: getting profile by cookie
+      operationId: profile
+      parameters:
+      - description: session
+        in: header
+        name: session
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: general
+          schema:
+            $ref: '#/definitions/handler.getGeneral'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
+      summary: get profile
+      tags:
+      - general
   /register/company:
     post:
       consumes:
@@ -155,6 +204,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/handler.workCreate'
+      - description: session
+        in: header
+        name: session
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -170,6 +224,8 @@ paths:
           description: Method Not Allowed
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: create new service/work
       tags:
       - service
@@ -208,6 +264,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/handler.workAction'
+      - description: session
+        in: header
+        name: session
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -223,6 +284,8 @@ paths:
           description: Method Not Allowed
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: apply for service
       tags:
       - service
@@ -238,6 +301,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/handler.workAction'
+      - description: session
+        in: header
+        name: session
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -253,6 +321,8 @@ paths:
           description: Method Not Allowed
         "500":
           description: Internal Server Error
+      security:
+      - ApiKeyAuth: []
       summary: finish work
       tags:
       - service
