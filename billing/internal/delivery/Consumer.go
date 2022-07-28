@@ -3,11 +3,12 @@ package delivery
 import (
 	"context"
 	"encoding/json"
+	"log"
+
 	"github.com/mrbelka12000/netfix/billing/config"
 	"github.com/mrbelka12000/netfix/billing/models"
 	"github.com/mrbelka12000/netfix/billing/tools"
 	"github.com/segmentio/kafka-go"
-	"log"
 )
 
 func (d *Delivery) ConsumerForWallets() {

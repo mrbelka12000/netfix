@@ -14,8 +14,8 @@ func NewServer(r *mux.Router) *http.Server {
 	return &http.Server{
 		Addr:         ":" + cfg.App.Port,
 		Handler:      r,
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 5 * time.Second,
-		IdleTimeout:  5 * time.Second,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  10 * time.Second,
 	}
 }

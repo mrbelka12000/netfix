@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+
 	"github.com/mrbelka12000/netfix/users/config"
 	"github.com/mrbelka12000/netfix/users/internal/repository"
 	"github.com/mrbelka12000/netfix/users/models"
 	"github.com/mrbelka12000/netfix/users/redis"
 	"github.com/mrbelka12000/netfix/users/tools"
 	"github.com/segmentio/kafka-go"
-	"log"
 )
 
 func (d *Delivery) ConsumerForCompany() {
@@ -223,5 +224,53 @@ func (d *Delivery) ConsumerForGetCustomer() {
 		if err != nil {
 			log.Println(err.Error())
 		}
+	}
+}
+
+func (d *Delivery) ConsumerForLogin() {
+	cfg := config.GetConf()
+
+	conf := kafka.ReaderConfig{
+		Brokers:  []string{cfg.Kafka.Brokers},
+		Topic:    cfg.Kafka.TopicLogin,
+		MaxBytes: cfg.Kafka.MaxBytes,
+	}
+
+	reader := kafka.NewReader(conf)
+
+	for {
+
+		m, err := reader.ReadMessage(context.Background())
+		if err != nil {
+			log.Println("Error while reading from consumer: ", err)
+			continue
+		}
+		l := &models.Login{}
+
+		err = json.Unmarshal(m.Value, &l)
+		if err != nil {
+			log.Println(err.Error())
+			continue
+		}
+
+		err = d.srv.Login(l)
+		if err != nil {
+			log.Println("no such user: " + err.Error())
+			continue
+		}
+
+		role := &models.Role{ID: l.ID, UserType: l.UserType}
+
+		err = redis.SetValue(l.UUID, tools.MakeJsonString(role))
+		if err != nil {
+			log.Println("session create error: " + err.Error())
+			continue
+		}
+		err = publish(tools.MakeJsonString(l), cfg.Kafka.TopicLoginResp)
+		if err != nil {
+			log.Println("publish error: " + err.Error())
+			continue
+		}
+		log.Println("login successfully")
 	}
 }

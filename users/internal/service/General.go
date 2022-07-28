@@ -6,6 +6,7 @@ import (
 
 	"github.com/mrbelka12000/netfix/users/internal/repository"
 	"github.com/mrbelka12000/netfix/users/models"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type srvGeneral struct {
@@ -17,11 +18,16 @@ func newGeneral(repo *repository.Repository) *srvGeneral {
 }
 
 func (sg *srvGeneral) Register(general *models.General, tx *sql.Tx) (int, error) {
-	id, err := sg.repo.Register(general, tx)
+	hash, err := bcrypt.GenerateFromPassword([]byte(general.Password), bcrypt.DefaultCost)
 	if err != nil {
-		log.Println(err)
+		log.Println("generate hash error: " + err.Error())
 		return 0, err
 	}
 
-	return id, nil
+	general.Password = string(hash)
+	return sg.repo.Register(general, tx)
+}
+
+func (sg *srvGeneral) Login(l *models.Login) error {
+	return sg.repo.Login(l)
 }

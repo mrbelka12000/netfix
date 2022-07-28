@@ -1,8 +1,9 @@
 package repository
 
 import (
-	"github.com/mrbelka12000/netfix/billing/models"
 	"log"
+
+	"github.com/mrbelka12000/netfix/billing/models"
 )
 
 type repoWallet struct {

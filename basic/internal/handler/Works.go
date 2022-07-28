@@ -1,14 +1,14 @@
 package handler
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/mrbelka12000/netfix/basic/config"
-	"github.com/mrbelka12000/netfix/basic/internal/delivery"
-	"github.com/mrbelka12000/netfix/basic/models"
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
+	"github.com/mrbelka12000/netfix/basic/config"
+	"github.com/mrbelka12000/netfix/basic/internal/delivery"
+	"github.com/mrbelka12000/netfix/basic/models"
 	"github.com/mrbelka12000/netfix/basic/tools"
 )
 

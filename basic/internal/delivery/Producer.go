@@ -2,9 +2,10 @@ package delivery
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/Shopify/sarama"
 	"github.com/mrbelka12000/netfix/basic/config"
-	"log"
 )
 
 func initProducer() (sarama.SyncProducer, error) {

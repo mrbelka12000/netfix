@@ -3,6 +3,7 @@ package tools
 import (
 	"bytes"
 	"encoding/json"
+
 	uuid "github.com/satori/go.uuid"
 )
 

@@ -2,11 +2,12 @@ package stepfuncs
 
 import (
 	"encoding/json"
-	"github.com/mrbelka12000/netfix/billing/internal/repository"
-	"github.com/mrbelka12000/netfix/billing/models"
 	"log"
 	"math"
 	"time"
+
+	"github.com/mrbelka12000/netfix/billing/internal/repository"
+	"github.com/mrbelka12000/netfix/billing/models"
 )
 
 func Billing(ch <-chan []byte, exit chan struct{}) {

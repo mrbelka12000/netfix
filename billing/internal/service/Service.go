@@ -1,7 +1,9 @@
 package service
 
-import "github.com/mrbelka12000/netfix/billing/internal/repository"
-import "github.com/mrbelka12000/netfix/billing/models"
+import (
+	"github.com/mrbelka12000/netfix/billing/internal/repository"
+	"github.com/mrbelka12000/netfix/billing/models"
+)
 
 type Wallet interface {
 	Create(wallet *models.Wallet) error

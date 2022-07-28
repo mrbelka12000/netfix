@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/mrbelka12000/netfix/basic/config"
 	"github.com/mrbelka12000/netfix/basic/models"
 	"github.com/segmentio/kafka-go"
-	"log"
-	"time"
 )
 
 func Consumer(topic, uuid string) (*models.General, error) {

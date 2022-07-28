@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+
 	"github.com/mrbelka12000/netfix/users/internal/repository"
 	"github.com/mrbelka12000/netfix/users/models"
 )

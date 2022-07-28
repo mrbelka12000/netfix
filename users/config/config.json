@@ -10,6 +10,8 @@
         "TopicCompany": "company",
         "TopicCustomer": "customer",
         "TopicAuth": "auth",
+        "TopicLogin": "login",
+        "TopicLoginResp": "loginresp",
         "TopicGetCompany": "getcompany",
         "TopicGetCustomer": "getcustomer",
         "TopicUserGetResp": "usergetresp",

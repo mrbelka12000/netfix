@@ -3,10 +3,11 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
-	"github.com/mrbelka12000/netfix/billing/config"
 	"log"
 	"sync"
+
+	_ "github.com/lib/pq"
+	"github.com/mrbelka12000/netfix/billing/config"
 )
 
 var (

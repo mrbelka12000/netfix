@@ -1,8 +1,9 @@
 package config
 
 import (
-	"github.com/tkanos/gonfig"
 	"sync"
+
+	"github.com/tkanos/gonfig"
 )
 
 const cfgPath = "users/config/config.json"
@@ -19,6 +20,8 @@ type config struct {
 		TopicCompany     string
 		TopicCustomer    string
 		TopicAuth        string
+		TopicLogin       string
+		TopicLoginResp   string
 		TopicGetCompany  string
 		TopicGetCustomer string
 		TopicUserGetResp string

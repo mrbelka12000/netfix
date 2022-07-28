@@ -49,3 +49,8 @@ type SwaggerWork struct {
 	Date        string  `json:"date"`
 	CompanyName string  `json:"companyName"`
 }
+
+type SwaggerLogin struct {
+	Credential string `json:"credential"`
+	Password   string `json:"password"`
+}

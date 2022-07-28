@@ -29,6 +29,8 @@ type config struct {
 		TopicCompany       string
 		TopicCustomer      string
 		TopicAuth          string
+		TopicLogin         string
+		TopicLoginResp     string
 		TopicGetCompany    string
 		TopicGetCustomer   string
 		TopicUserGetResp   string

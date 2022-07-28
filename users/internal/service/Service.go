@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+
 	"github.com/mrbelka12000/netfix/users/internal/repository"
 	"github.com/mrbelka12000/netfix/users/models"
 )
@@ -18,6 +19,7 @@ type Customer interface {
 
 type General interface {
 	Register(general *models.General, tx *sql.Tx) (int, error)
+	Login(l *models.Login) error
 }
 
 type Service struct {

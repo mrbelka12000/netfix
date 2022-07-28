@@ -39,6 +39,13 @@ definitions:
       workField:
         type: string
     type: object
+  handler.login:
+    properties:
+      credential:
+        type: string
+      password:
+        type: string
+    type: object
   handler.session:
     properties:
       cookie:
@@ -115,6 +122,37 @@ info:
   title: net-fix
   version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: auth_login
+      parameters:
+      - description: login
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.session'
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "405":
+          description: Method Not Allowed
+        "500":
+          description: Internal Server Error
+      summary: login
+      tags:
+      - auth
   /profile:
     get:
       consumes:

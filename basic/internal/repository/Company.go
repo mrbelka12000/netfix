@@ -1,9 +1,10 @@
 package repository
 
 import (
-	"github.com/mrbelka12000/netfix/basic/models"
 	"log"
 	"time"
+
+	"github.com/mrbelka12000/netfix/basic/models"
 )
 
 type repoCompany struct {
