@@ -6,4 +6,4 @@ start_with_logs:
 
 cleanVolumes:
 	@docker-compose down
-	@docker volume rm netfix_users netfix_billing netfix_basic netfix_postgresUsers netfix_postgresBasic netfix_postgresBilling netfix_kafka netfix_redis_data
+	@docker volume rm netfix_users netfix_billing netfix_basic netfix_postgresUsers netfix_postgresBasic netfix_postgresBilling netfix_kafka netfix_redis_data netfix_zookeper_data

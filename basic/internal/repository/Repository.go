@@ -18,6 +18,7 @@ type Work interface {
 	GetWorkFields() (*models.WorkFields, error)
 	IsExists(workField string) bool
 	GetByID(id int) (*models.Work, error)
+	GetAll() ([]models.Work, error)
 }
 
 type Repository struct {

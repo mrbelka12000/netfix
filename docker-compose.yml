@@ -6,6 +6,8 @@ services:
       - netfix
     ports:
       - "2181:2181"
+    volumes:
+      - zookeper_data:/data
   kafka:
     image: wurstmeister/kafka:latest
     container_name: kafka
@@ -131,6 +133,7 @@ volumes:
   postgresUsers:
   postgresBasic:
   postgresBilling:
+  zookeper_data:
 
 networks:
   netfix:

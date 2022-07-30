@@ -24,3 +24,7 @@ func (sw *srvWorks) IsExists(workField string) bool {
 func (sw *srvWorks) GetByID(id int) (*models.Work, error) {
 	return sw.repo.GetByID(id)
 }
+
+func (sw *srvWorks) GetAll() ([]models.Work, error) {
+	return sw.repo.GetAll()
+}
