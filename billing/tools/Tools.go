@@ -3,14 +3,7 @@ package tools
 import (
 	"bytes"
 	"encoding/json"
-
-	uuid "github.com/satori/go.uuid"
 )
-
-func GetRandomString() string {
-	UUID := uuid.NewV4()
-	return UUID.String()
-}
 
 func MakeJsonString(value interface{}) string {
 	if value == nil {
@@ -21,4 +14,8 @@ func MakeJsonString(value interface{}) string {
 	e.SetEscapeHTML(false)
 	e.Encode(value)
 	return bf.String()
+}
+
+func PtrBool(v bool) *bool {
+	return &v
 }

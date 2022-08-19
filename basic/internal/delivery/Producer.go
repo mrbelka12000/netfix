@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/Shopify/sarama"
@@ -45,8 +44,8 @@ func Publish(message, topic string) error {
 		return err
 	}
 
-	fmt.Print("Message: ", message)
-	fmt.Println("Partition: ", p)
-	fmt.Println("Offset: ", o)
+	log.Print("Message: ", message)
+	log.Println("Partition: ", p)
+	log.Println("Offset: ", o)
 	return nil
 }

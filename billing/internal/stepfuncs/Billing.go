@@ -4,40 +4,57 @@ import (
 	"encoding/json"
 	"log"
 	"math"
+	"sync"
 	"time"
 
 	"github.com/mrbelka12000/netfix/billing/internal/repository"
 	"github.com/mrbelka12000/netfix/billing/models"
+	"github.com/mrbelka12000/netfix/billing/tools"
 )
 
-func Billing(ch <-chan []byte, exit chan struct{}) {
+func Billing(bil <-chan []byte, exit chan struct{}, wg *sync.WaitGroup) {
+	defer func() { wg.Done() }()
+
 	for {
+		var finished bool
+		var started bool
 		select {
-		case applyJson := <-ch:
+		case applyJson := <-bil:
 			log.Println("billing starting")
-			go billingOperations(applyJson, exit)
+			go billingOperations(applyJson, &started, &finished)
 		case <-exit:
-			panic("step func billing exited")
+			if !started {
+				log.Println("billing down")
+				break
+			}
+			if !finished && started {
+				time.Sleep(5 * time.Second)
+				if finished {
+					log.Println("billing down")
+					break
+				} else {
+					panic("AAAAAAAAAAAA")
+				}
+			}
 		}
 	}
 }
 
-func billingOperations(applyJson []byte, exit chan<- struct{}) {
+func billingOperations(applyJson []byte, started, finished *bool) {
 
+	started = tools.PtrBool(true)
 	conn := repository.GetConnection()
 
 	ap := &models.Apply{}
 	err := json.Unmarshal(applyJson, &ap)
 	if err != nil {
 		log.Println(err.Error())
-		exit <- struct{}{}
 		return
 	}
 
 	tx, err := conn.Begin()
 	if err != nil {
 		log.Println("tx creation error: " + err.Error())
-		exit <- struct{}{}
 		return
 	}
 	defer tx.Commit()
@@ -52,7 +69,6 @@ func billingOperations(applyJson []byte, exit chan<- struct{}) {
 	if err != nil {
 		log.Println("create billing error: " + err.Error())
 		tx.Rollback()
-		exit <- struct{}{}
 		return
 	}
 
@@ -67,7 +83,6 @@ func billingOperations(applyJson []byte, exit chan<- struct{}) {
 	if err != nil {
 		log.Println("charge-off from customer error: " + err.Error())
 		tx.Rollback()
-		exit <- struct{}{}
 		return
 	}
 
@@ -82,9 +97,10 @@ func billingOperations(applyJson []byte, exit chan<- struct{}) {
 	if err != nil {
 		log.Println("cash deposit to company error: " + err.Error())
 		tx.Rollback()
-		exit <- struct{}{}
 		return
 	}
+
+	finished = tools.PtrBool(true)
 	log.Println("billing successfully finished")
 }
 

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"sync"
 
 	"github.com/mrbelka12000/netfix/users/config"
 	"github.com/mrbelka12000/netfix/users/internal/repository"
@@ -14,7 +15,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func (d *Delivery) ConsumerForCompany() {
+func (d *Delivery) ConsumerForCompany(exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -24,8 +25,10 @@ func (d *Delivery) ConsumerForCompany() {
 	}
 
 	reader := kafka.NewReader(conf)
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
 
-	for {
+	for !finished {
 
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
@@ -80,7 +83,7 @@ func (d *Delivery) ConsumerForCompany() {
 	}
 }
 
-func (d *Delivery) ConsumerForCustomer() {
+func (d *Delivery) ConsumerForCustomer(exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 	conf := kafka.ReaderConfig{
 		Brokers:  []string{cfg.Kafka.Brokers},
@@ -89,8 +92,10 @@ func (d *Delivery) ConsumerForCustomer() {
 	}
 
 	reader := kafka.NewReader(conf)
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
 
-	for {
+	for !finished {
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
 			fmt.Println("Error while reading from consumer: ", err)
@@ -145,7 +150,7 @@ func (d *Delivery) ConsumerForCustomer() {
 	}
 }
 
-func (d *Delivery) ConsumerForGetCompany() {
+func (d *Delivery) ConsumerForGetCompany(exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -155,8 +160,10 @@ func (d *Delivery) ConsumerForGetCompany() {
 	}
 
 	reader := kafka.NewReader(conf)
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
 
-	for {
+	for !finished {
 
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
@@ -186,7 +193,7 @@ func (d *Delivery) ConsumerForGetCompany() {
 	}
 }
 
-func (d *Delivery) ConsumerForGetCustomer() {
+func (d *Delivery) ConsumerForGetCustomer(exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -196,8 +203,10 @@ func (d *Delivery) ConsumerForGetCustomer() {
 	}
 
 	reader := kafka.NewReader(conf)
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
 
-	for {
+	for !finished {
 
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
@@ -227,7 +236,7 @@ func (d *Delivery) ConsumerForGetCustomer() {
 	}
 }
 
-func (d *Delivery) ConsumerForLogin() {
+func (d *Delivery) ConsumerForLogin(exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -237,8 +246,10 @@ func (d *Delivery) ConsumerForLogin() {
 	}
 
 	reader := kafka.NewReader(conf)
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
 
-	for {
+	for !finished {
 
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
@@ -272,5 +283,22 @@ func (d *Delivery) ConsumerForLogin() {
 			continue
 		}
 		log.Println("login successfully")
+	}
+}
+
+func closeReader(reader *kafka.Reader, exit chan struct{}, wg *sync.WaitGroup, finished *bool) {
+	defer func() {
+		exit <- struct{}{}
+		finished = tools.PtrBool(true)
+		wg.Done()
+	}()
+
+	<-exit
+
+	err := reader.Close()
+	if err != nil {
+		log.Printf("kafka reader close error: %v \n", err)
+	} else {
+		log.Println("kafka reader closed")
 	}
 }

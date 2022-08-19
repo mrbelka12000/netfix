@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"log"
+	"sync"
 
 	"github.com/mrbelka12000/netfix/billing/config"
 	"github.com/mrbelka12000/netfix/billing/models"
@@ -11,7 +12,7 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func (d *Delivery) ConsumerForWallets() {
+func (d *Delivery) ConsumerForWallets(exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -22,8 +23,10 @@ func (d *Delivery) ConsumerForWallets() {
 
 	reader := kafka.NewReader(conf)
 
-	for {
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
 
+	for !finished {
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
 			log.Println("Error while reading from consumer: ", err)
@@ -54,7 +57,7 @@ func (d *Delivery) ConsumerForWallets() {
 	}
 }
 
-func (d *Delivery) ConsumerForBilling(bil chan<- []byte) {
+func (d *Delivery) ConsumerForBilling(bil chan<- []byte, exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -65,8 +68,10 @@ func (d *Delivery) ConsumerForBilling(bil chan<- []byte) {
 
 	reader := kafka.NewReader(conf)
 
-	for {
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
 
+	for !finished {
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
 			log.Println("Error while reading from consumer: ", err)
@@ -90,7 +95,7 @@ func (d *Delivery) ConsumerForBilling(bil chan<- []byte) {
 	}
 }
 
-func (d *Delivery) ConsumerForGetWallet() {
+func (d *Delivery) ConsumerForGetWallet(exit chan struct{}, wg *sync.WaitGroup) {
 	cfg := config.GetConf()
 
 	conf := kafka.ReaderConfig{
@@ -101,7 +106,10 @@ func (d *Delivery) ConsumerForGetWallet() {
 
 	reader := kafka.NewReader(conf)
 
-	for {
+	var finished bool
+	go closeReader(reader, exit, wg, &finished)
+
+	for !finished {
 
 		m, err := reader.ReadMessage(context.Background())
 		if err != nil {
@@ -129,5 +137,22 @@ func (d *Delivery) ConsumerForGetWallet() {
 			continue
 		}
 		log.Println("response successfully created")
+	}
+}
+
+func closeReader(reader *kafka.Reader, exit chan struct{}, wg *sync.WaitGroup, finished *bool) {
+	defer func() {
+		exit <- struct{}{}
+		finished = tools.PtrBool(true)
+		wg.Done()
+	}()
+
+	<-exit
+
+	err := reader.Close()
+	if err != nil {
+		log.Printf("kafka reader close error: %v \n", err)
+	} else {
+		log.Println("kafka reader closed")
 	}
 }

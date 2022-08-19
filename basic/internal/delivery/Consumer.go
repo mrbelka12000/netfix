@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"time"
 
@@ -29,13 +28,13 @@ func Consumer(topic, uuid string) (*models.General, error) {
 	for {
 		m, err := reader.ReadMessage(ctx)
 		if err != nil {
-			fmt.Println("Error while reading from consumer: ", err)
+			log.Println("Error while reading from consumer: ", err)
 			return nil, errors.New("лимит ожидания закончился")
 		}
 
 		if len(m.Value) != 0 {
 			gen := &models.General{}
-			fmt.Printf("Message from %v is %v \n", topic, string(m.Value))
+			log.Printf("Message from %v is %v \n", topic, string(m.Value))
 			err = json.Unmarshal(m.Value, &gen)
 			if err != nil {
 				log.Println(err.Error())
@@ -48,7 +47,7 @@ func Consumer(topic, uuid string) (*models.General, error) {
 			gen.UUID = ""
 			return gen, nil
 		}
-		fmt.Println("No message from kafka")
+		log.Println("No message from kafka")
 		return nil, errors.New("пришло не известно что")
 	}
 }

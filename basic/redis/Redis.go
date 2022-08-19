@@ -76,3 +76,8 @@ func GetUserType(session string) (*models.Role, error) {
 
 	return ut, nil
 }
+
+func CloseRedis() error {
+	c := getClient()
+	return c.Close()
+}
